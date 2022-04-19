@@ -42,6 +42,24 @@ const actions = {
       throw e;
     }
   },
+  async getKiosk({ dispatch, commit }, { name, key }) {
+    try {
+      const headers = {
+        key,
+      };
+
+      const result = await axios.get(
+        "http://" + host + "/api/terminal/kiosks/get/" + name,
+        {
+          headers,
+        }
+      );
+      return result.data;
+    } catch (e) {
+      console.log(dispatch, commit, key);
+      throw e;
+    }
+  },
 };
 
 export default {

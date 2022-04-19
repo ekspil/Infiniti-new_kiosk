@@ -22,7 +22,7 @@
         </v-card-text>
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
-        <v-btn rounded color="brown" dark @click="openCart"
+        <v-btn rounded color="brown" dark x-large @click="openCart"
           ><v-icon size="24px"> mdi-shopping </v-icon>
           Перейти в корзину
         </v-btn>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+
+import { cartReduce } from "@/utils/cart";
 export default {
   props: {
     actions: {
@@ -69,15 +71,7 @@ export default {
   },
   computed: {
     cartData() {
-      return this.cart.reduce(
-        (acc, item) => {
-          if (!item.count) item.count = 1;
-          acc.sum = acc.sum + item.count * item.price;
-          acc.count = acc.count + item.count;
-          return acc;
-        },
-        { count: 0, sum: 0 }
-      );
+      return cartReduce(this.cart)
     },
   },
 };

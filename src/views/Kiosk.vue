@@ -17,12 +17,29 @@
     <cart
       :activeCart="activeCart"
       :cart="cart"
+      :orderType="orderType"
+      :products="products"
       @cartOpenClose="cartOpenClose"
       @productMinus="productMinusFromCart"
       @productPlus="productToCart"
       @productDelete="productDeleteFromCart"
+      @orderTypeChange="orderTypeChange"
+      @payOpenClose="payOpenClose"
     ></cart>
-    <helper :helper="helper" @helperOpenClose="helperOpenClose"></helper>
+    <helper
+      :helper="helper"
+      :mods="mods"
+      :selectedProduct="selectedProduct"
+      :products="products"
+      @helperOpenClose="helperOpenClose"
+    ></helper>
+    <pay :activePay="activePay" @payOpenClose="payOpenClose"></pay>
+    <start
+      :activeStart="activeStart"
+      @startOpenClose="startOpenClose"
+      @orderTypeChange="orderTypeChange"
+    ></start>
+    <lock :activeLock="kiosk.lock"></lock>
   </div>
 </template>
 
@@ -34,6 +51,9 @@ import Menu from "@/components/Menu";
 
 import Cart from "@/components/Cart";
 import Helper from "@/components/Helper";
+import Pay from "@/components/Pay";
+import Start from "@/components/Start";
+import Lock from "@/components/Lock";
 
 import { cartPlus, cartMinus, cartDelete } from "@/utils/cart";
 
@@ -46,23 +66,52 @@ export default {
     Menu,
     Cart,
     Helper,
+    Start,
+    Pay,
+    Lock,
   },
 
   data: () => ({
+    orderType: "IN",
     activeCart: false,
-    helper: true,
+    activePay: false,
+    activeStart: true,
+    helper: false,
     selectedGroupId: null,
+    selectedProduct: null,
     products: null,
     groups: null,
     mods: null,
     cart: [],
+    updateInterval: null,
+    kiosk: {
+      lock: true,
+    },
   }),
 
   methods: {
+    payOpenClose() {
+      this.activePay = !this.activePay;
+    },
     cartOpenClose() {
       this.activeCart = !this.activeCart;
     },
-    productToCart(product) {
+    startOpenClose() {
+      this.activeStart = !this.activeStart;
+    },
+    orderTypeChange(type) {
+      this.orderType = type;
+    },
+    productToCart(prod, replace) {
+      const product = JSON.parse(JSON.stringify(prod));
+      if (product.mods && product.mods.length > 0) {
+        this.helper = true;
+        this.selectedProduct = product;
+        if (replace !== undefined) {
+          this.selectedProduct.replace = replace;
+        }
+        return;
+      }
       this.cart = cartPlus(this.cart, product);
     },
     productMinusFromCart(product) {
@@ -74,8 +123,44 @@ export default {
     groupSelect(groupId) {
       this.selectedGroupId = groupId;
     },
-    helperOpenClose() {
+    helperOpenClose(type) {
       this.helper = !this.helper;
+      if (type === "CANCEL") {
+        this.selectedProduct = null;
+      }
+      if (type === "ADD") {
+        if (this.selectedProduct.replace !== undefined) {
+          const num = this.selectedProduct.replace;
+          this.cart = this.cart.map((item, index) => {
+            if (index === num) {
+              delete this.selectedProduct.replace;
+              return this.selectedProduct;
+            }
+            return item;
+          });
+          this.selectedProduct = null;
+        } else {
+          this.cart = cartPlus(this.cart, this.selectedProduct);
+          this.selectedProduct = null;
+        }
+      }
+    },
+    async updateStatus() {
+      const name = this.$store.state.auth.name;
+      if (!name) {
+        this.$store.commit("auth/setToken", null);
+        await this.$router.push("/login");
+        return;
+      }
+      const result = await this.$store.dispatch("data/getKiosk", { name });
+      if (result.command === "reload") {
+        alert("Перезагрузка");
+      }
+      if (result.command === "logout") {
+        this.$store.commit("auth/setToken", null);
+        await this.$router.push("/login");
+      }
+      this.kiosk = result;
     },
   },
   computed: {
@@ -90,6 +175,54 @@ export default {
     this.mods = await this.$store.dispatch("data/getAllMods", {});
     this.products = await this.$store.dispatch("data/getAllProducts", {});
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
+
+    this.updateInterval = setInterval(async () => {
+      await this.updateStatus();
+    }, 3000);
+  },
+  beforeDestroy() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
   },
 };
 </script>
+<style>
+/*
+ *  STYLE 6
+ */
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f90;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+
+html {
+  font-weight: bold;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+}
+</style>

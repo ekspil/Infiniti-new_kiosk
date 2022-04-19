@@ -8,12 +8,14 @@ const state = () => ({
 const mutations = {
   setToken(state, info) {
     if (info) {
-      const { token, name, id } = info;
+      const { token, name, id,} = info;
       state.token = token;
-      state.user.name = name;
-      state.user.id = id;
+      state.name = name;
+      state.id = id;
     } else {
       state.token = null;
+      state.name = null;
+      state.id = null;
     }
   },
 
@@ -23,21 +25,28 @@ const mutations = {
 };
 
 const actions = {
-  async login({ commit }, { login, password }) {
-    const result = await axios.post(
-      "http://" + host + "/api/terminal/users/auth",
-      {
-        login,
-        password,
-      }
-    );
+  async login({ commit }, { name, key }) {
+    try {
+      const result = await axios.post(
+        "http://" + host + "/api/terminal/kiosks/auth",
+        {
+          name,
+          key,
+        }
+      );
 
-    if (result && result.data && result.data.id) {
-      commit("setUserData", result.data);
-      return true;
-    } else {
+      if (result && result.data && result.data.token) {
+        commit("setToken", result.data);
+        return true;
+      } else {
+        return false;
+      }
+    }
+    catch (e) {
+      console.log(e)
       return false;
     }
+
   },
 };
 

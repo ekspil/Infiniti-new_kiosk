@@ -47,17 +47,19 @@ export default {
     async loginClick() {
       this.loading = true;
       const formData = {
-        login: this.login,
-        password: this.password,
+        name: this.login,
+        key: this.password,
       };
       const ok = await this.$store.dispatch("auth/login", formData);
+      console.log(ok)
       if (!ok) {
         setTimeout(() => {
           this.loading = false;
         }, 2000);
       } else {
         this.loading = false;
-        await this.$router.push("/kiosk");
+
+        this.$router.push("/kiosk");
       }
     },
   },

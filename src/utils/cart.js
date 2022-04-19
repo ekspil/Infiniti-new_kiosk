@@ -1,4 +1,5 @@
 export const cartPlus = (cart, product) => {
+  product = JSON.parse(JSON.stringify(product))
   if (!product.count) product.count = 1;
   const isProduct = cart.find(
     (item) =>
@@ -6,7 +7,6 @@ export const cartPlus = (cart, product) => {
       item.mods === product.mods &&
       product.price === item.price
   );
-  console.log(1);
   if (!isProduct) {
     cart.push(product);
     return cart;
@@ -51,10 +51,21 @@ export const cartDelete = (cart, product) => {
       item.mods === product.mods &&
       product.price === item.price
     ) {
-      return false
-    }
-    else {
-      return true
+      return false;
+    } else {
+      return true;
     }
   });
+};
+
+export const cartReduce = (cart) => {
+  return cart.reduce(
+    (acc, item) => {
+      if (!item.count) item.count = 1;
+      acc.sum = acc.sum + item.count * item.price;
+      acc.count = acc.count + item.count;
+      return acc;
+    },
+    { count: 0, sum: 0 }
+  );
 };

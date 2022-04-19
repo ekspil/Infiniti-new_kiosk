@@ -10,7 +10,7 @@
           md="6"
         >
           <v-card flat class="" @click="productToCart(product)">
-            <v-img :src="product.img || '/burger.png'" height="300px"> </v-img>
+            <v-img :src="product.img ? 'http://localhost:3210/api/v1/files/download/1/' + product.img : '/burger.png'" aspect-ratio="1.3" > </v-img>
             <v-card-title class="pt-0 pb-0"
               ><div class="ma-auto">{{ product.name }}</div></v-card-title
             >

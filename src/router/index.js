@@ -36,9 +36,10 @@ router.beforeEach((to, from, next) => {
     isSecured = false;
   }
   if (to.path.includes("/kiosk")) {
-    isSecured = false;
+    isSecured = true;
   }
   const token = store.state.auth.token;
+
 
   if (isSecured && !token) {
     return next("/login");
