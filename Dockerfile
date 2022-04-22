@@ -1,7 +1,6 @@
 FROM node:11 as builder
 ARG VUE_APP_GRAPHQL_API=http://api.rb24.ru
 RUN mkdir -p /src/src
-COPY layout /src/layout
 COPY public /src/public
 COPY src /src/src
 COPY .env /src
