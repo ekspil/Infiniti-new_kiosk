@@ -215,7 +215,7 @@ export default {
     minusTime(){
       if(this.timeToClear >= 3){
 
-        this.timeToClear =- 3
+        this.timeToClear -= 3
       }
       if(this.timeToClear < 3 && this.timeToClear > -3){
         this.clear()
