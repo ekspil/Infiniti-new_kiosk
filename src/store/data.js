@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "localhost:3000";
+const host = "api.rb24.ru";
 const state = () => ({
   data: null,
 });
@@ -10,7 +10,7 @@ const actions = {
   async getAllGroups({ dispatch, commit }, { password }) {
     try {
       const result = await axios.get(
-        "http://" + host + "/api/terminal/groups/get"
+        "https://" + host + "/api/terminal/groups/get"
       );
       return result.data;
     } catch (e) {
@@ -20,7 +20,7 @@ const actions = {
   },
   async getAllProducts({ dispatch, commit }, { password, archive }) {
     try {
-      let url = "http://" + host + "/api/terminal/products/get";
+      let url = "https://" + host + "/api/terminal/products/get";
       if (archive) {
         url = url + "?archive=1";
       }
@@ -34,7 +34,7 @@ const actions = {
   async getAllMods({ dispatch, commit }, { password }) {
     try {
       const result = await axios.get(
-        "http://" + host + "/api/terminal/mods/get"
+        "https://" + host + "/api/terminal/mods/get"
       );
       return result.data;
     } catch (e) {
@@ -49,7 +49,7 @@ const actions = {
       };
 
       const result = await axios.get(
-        "http://" + host + "/api/terminal/kiosks/get/" + name,
+        "https://" + host + "/api/terminal/kiosks/get/" + name,
         {
           headers,
         }

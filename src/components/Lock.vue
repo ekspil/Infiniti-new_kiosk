@@ -29,13 +29,14 @@ export default {
   props: {
     activeLock: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
-  data: () => ({}),
+  data: () => ({
+  }),
   methods: {
     lockOpenClose() {
-      this.$emit("lockOpenClose", false);
+      this.$emit("lockOpenClose", true);
     },
   },
 };

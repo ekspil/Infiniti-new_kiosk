@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "localhost:3000";
+const host = "api.rb24.ru";
 const state = () => ({
   token: null,
   user: {},
@@ -28,7 +28,7 @@ const actions = {
   async login({ commit }, { name, key }) {
     try {
       const result = await axios.post(
-        "http://" + host + "/api/terminal/kiosks/auth",
+        "https://" + host + "/api/terminal/kiosks/auth",
         {
           name,
           key,

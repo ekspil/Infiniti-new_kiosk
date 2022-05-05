@@ -33,7 +33,7 @@
       :products="products"
       @helperOpenClose="helperOpenClose"
     ></helper>
-    <pay :activePay="activePay" @payOpenClose="payOpenClose"></pay>
+    <pay :pay="pay" @payOpenClose="payOpenClose"></pay>
     <start
       :activeStart="activeStart"
       @startOpenClose="startOpenClose"
@@ -73,8 +73,13 @@ export default {
 
   data: () => ({
     orderType: "IN",
+    pay: {
+      alert: "",
+      activePay: false,
+      orderId: "",
+      success: false,
+    },
     activeCart: false,
-    activePay: false,
     activeStart: true,
     helper: false,
     selectedGroupId: null,
@@ -90,8 +95,43 @@ export default {
   }),
 
   methods: {
-    payOpenClose() {
-      this.activePay = !this.activePay;
+    clear() {
+      this.pay = {
+        alert: "",
+        activePay: false,
+        orderId: "",
+        success: false,
+      };
+      this.activeCart = false;
+      this.activeStart = true;
+      this.helper = false;
+      this.selectedGroupId = null;
+      this.selectedProduct = null;
+      this.cart = [];
+    },
+    async payOpenClose() {
+      this.pay.activePay = !this.pay.activePay;
+      try {
+        const result = await this.$store.dispatch("kassa/payTerminal", {
+          items: this.cart,
+          type: this.orderType,
+        });
+        if (result.ok === false) {
+          this.pay.alert = result.result;
+          setTimeout(() => {
+            this.pay.alert = ""
+            this.pay.activePay = false
+          }, 7000);
+        }
+        if (result.ok === true) {
+          this.pay.orderId = result.order.id;
+          setTimeout(() => {
+            this.clear();
+          }, 7000);
+        }
+      } catch (e) {
+        this.pay.alert = e.message;
+      }
     },
     cartOpenClose() {
       this.activeCart = !this.activeCart;
