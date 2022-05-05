@@ -7,18 +7,25 @@
       class="grey lighten-4 text-center d-flex align-center justify-space-between mb-6"
     >
       <v-card flat color="grey lighten-4" width="30%">
-        <v-btn class="ma-2" outlined fab color="brown">
-          <v-icon>mdi-brightness-percent</v-icon> </v-btn
-        ><v-btn class="ma-2" outlined fab color="brown">
-          <v-icon>mdi-magnify</v-icon> </v-btn
-        ><v-btn class="ma-2" outlined fab color="brown">
-          <v-icon>mdi-tag</v-icon>
+<!--        <v-btn class="ma-2" outlined fab color="brown">-->
+<!--          <v-icon>mdi-brightness-percent</v-icon>-->
+<!--        </v-btn>-->
+<!--        <v-btn class="ma-2" outlined fab color="brown">-->
+<!--          <v-icon>mdi-magnify</v-icon>-->
+<!--        </v-btn>-->
+<!--        <v-btn class="ma-2" outlined fab color="brown">-->
+<!--          <v-icon>mdi-tag</v-icon>-->
+<!--        </v-btn>-->
+        <v-btn class="ma-2" outlined fab color="brown" @click="clear">
+          <v-icon>mdi-cancel</v-icon>
         </v-btn>
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
         <v-card-text class="d-flex flex-column">
           <div class="align-self-start">Товаров {{ cartData.count }}:</div>
-          <div class="align-self-start text-h5 text--primary">{{ cartData.sum }} Р</div>
+          <div class="align-self-start text-h5 text--primary">
+            {{ cartData.sum }} Р
+          </div>
         </v-card-text>
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
@@ -32,7 +39,6 @@
 </template>
 
 <script>
-
 import { cartReduce } from "@/utils/cart";
 export default {
   props: {
@@ -68,10 +74,13 @@ export default {
     openCart() {
       this.$emit("cartOpenClose");
     },
+    clear() {
+      this.$emit("clear");
+    },
   },
   computed: {
     cartData() {
-      return cartReduce(this.cart)
+      return cartReduce(this.cart);
     },
   },
 };

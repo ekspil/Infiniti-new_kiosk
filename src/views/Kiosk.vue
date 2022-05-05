@@ -12,7 +12,7 @@
       ></Menu>
     </v-main>
 
-    <bottom @cartOpenClose="cartOpenClose" :cart="cart"></bottom>
+    <bottom @cartOpenClose="cartOpenClose" @clear="clear" :cart="cart"></bottom>
     <!--    <bottom-sheet :activeBottomSheet="activeBottomSheet"></bottom-sheet>-->
     <cart
       :activeCart="activeCart"
@@ -88,6 +88,7 @@ export default {
     groups: null,
     mods: null,
     cart: [],
+    timeToClear: 0,
     updateInterval: null,
     kiosk: {
       lock: true,
@@ -110,6 +111,7 @@ export default {
       this.cart = [];
     },
     async payOpenClose() {
+      this.timeToClear = 300
       this.pay.activePay = !this.pay.activePay;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {
@@ -134,15 +136,19 @@ export default {
       }
     },
     cartOpenClose() {
+      this.timeToClear = 60
       this.activeCart = !this.activeCart;
     },
     startOpenClose() {
+      this.timeToClear = 60
       this.activeStart = !this.activeStart;
     },
     orderTypeChange(type) {
+      this.timeToClear = 60
       this.orderType = type;
     },
     productToCart(prod, replace) {
+      this.timeToClear = 60
       const product = JSON.parse(JSON.stringify(prod));
       if (product.mods && product.mods.length > 0) {
         this.helper = true;
@@ -155,15 +161,19 @@ export default {
       this.cart = cartPlus(this.cart, product);
     },
     productMinusFromCart(product) {
+      this.timeToClear = 60
       this.cart = cartMinus(this.cart, product);
     },
     productDeleteFromCart(product) {
+      this.timeToClear = 60
       this.cart = cartDelete(this.cart, product);
     },
     groupSelect(groupId) {
+      this.timeToClear = 60
       this.selectedGroupId = groupId;
     },
     helperOpenClose(type) {
+      this.timeToClear = 60
       this.helper = !this.helper;
       if (type === "CANCEL") {
         this.selectedProduct = null;
@@ -202,6 +212,15 @@ export default {
       }
       this.kiosk = result;
     },
+    minusTime(){
+      if(this.timeToClear >= 3){
+
+        this.timeToClear =- 3
+      }
+      if(this.timeToClear < 3 && this.timeToClear > -3){
+        this.clear()
+      }
+    }
   },
   computed: {
     selectedProducts() {
@@ -217,6 +236,7 @@ export default {
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
 
     this.updateInterval = setInterval(async () => {
+      this.minusTime()
       await this.updateStatus();
     }, 3000);
   },
