@@ -114,7 +114,7 @@
                     <v-img
                       :src="
                         item.img
-                          ? 'http://localhost:3210/api/v1/files/download/1/' +
+                          ? 'https://api.rb24.ru/api/v1/files/download/1/' +
                             item.img
                           : '/burger.png'
                       "
@@ -154,7 +154,7 @@
                   aspect-ratio="1.3"
                   :src="
                     product.img
-                      ? 'http://localhost:3210/api/v1/files/download/1/' +
+                      ? 'https://api.rb24.ru/api/v1/files/download/1/' +
                         product.img
                       : '/burger.png'
                   "

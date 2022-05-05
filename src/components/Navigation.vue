@@ -9,7 +9,7 @@
           @click="groupSelect(group.id)"
         >
           <v-list-item-avatar rounded>
-            <v-img :alt="group.name"  :src="group.img ? 'http://localhost:3210/api/v1/files/download/1/' + group.img : '/burger.png'"></v-img>
+            <v-img :alt="group.name"  :src="group.img ? 'https://api.rb24.ru/api/v1/files/download/1/' + group.img : '/burger.png'"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
