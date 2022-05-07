@@ -20,7 +20,7 @@ export default {
     async payTerminal({ dispatch, commit }, body) {
       try {
         const result = await axios.post(
-          "https://" + localhost + "/api/kassa/payTerminal/",
+          "http://" + localhost + "/api/kassa/payTerminal/",
           body
         );
         return result.data;
@@ -44,7 +44,7 @@ export default {
     async returnChekPayment({ dispatch, commit }, body) {
       try {
         const result = await axios.post(
-          "https://" + localhost + "/api/kassa/returnChekPayment/",
+          "http://" + localhost + "/api/kassa/returnChekPayment/",
           body
         );
         console.log(result.data)
