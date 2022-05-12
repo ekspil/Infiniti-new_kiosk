@@ -19,13 +19,22 @@
       :cart="cart"
       :orderType="orderType"
       :products="products"
+      :helpers="helpers"
       @cartOpenClose="cartOpenClose"
       @productMinus="productMinusFromCart"
       @productPlus="productToCart"
       @productDelete="productDeleteFromCart"
       @orderTypeChange="orderTypeChange"
       @payOpenClose="payOpenClose"
+      @productToCart="productToCart"
+      @billAskOpenClose="billAskOpenClose"
     ></cart>
+    <bill-ask
+      :pay="pay"
+      @payOpenClose="payOpenClose"
+      @billAskOpenClose="billAskOpenClose"
+      @updateTimer="updateTimer"
+    ></bill-ask>
     <helper
       :helper="helper"
       :mods="mods"
@@ -54,6 +63,7 @@ import Helper from "@/components/Helper";
 import Pay from "@/components/Pay";
 import Start from "@/components/Start";
 import Lock from "@/components/Lock";
+import BillAsk from "@/components/BillAsk";
 
 import { cartPlus, cartMinus, cartDelete } from "@/utils/cart";
 
@@ -69,6 +79,7 @@ export default {
     Start,
     Pay,
     Lock,
+    BillAsk
   },
 
   data: () => ({
@@ -78,6 +89,9 @@ export default {
       activePay: false,
       orderId: "",
       success: false,
+      billAsk: false,
+      billDialog: false,
+      email: ""
     },
     activeCart: false,
     activeStart: true,
@@ -86,6 +100,7 @@ export default {
     selectedProduct: null,
     products: null,
     groups: null,
+    helpers: null,
     mods: null,
     cart: [],
     timeToClear: 0,
@@ -102,6 +117,9 @@ export default {
         activePay: false,
         orderId: "",
         success: false,
+        billAsk: false,
+        billDialog: false,
+        email: ""
       };
       this.activeCart = false;
       this.activeStart = true;
@@ -110,13 +128,18 @@ export default {
       this.selectedProduct = null;
       this.cart = [];
     },
+    updateTimer(){
+      this.timeToClear = 60
+    },
     async payOpenClose() {
-      this.timeToClear = 300
+      this.timeToClear = 999
       this.pay.activePay = !this.pay.activePay;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {
           items: this.cart,
           type: this.orderType,
+          kiosk: this.$store.state.auth.name,
+          clientEmail: this.pay.email
         });
         if (result.ok === false) {
           this.pay.alert = result.result;
@@ -131,13 +154,19 @@ export default {
             this.clear();
           }, 7000);
         }
+        this.timeToClear = 60
       } catch (e) {
+        this.timeToClear = 120
         this.pay.alert = e.message;
       }
     },
     cartOpenClose() {
       this.timeToClear = 60
       this.activeCart = !this.activeCart;
+    },
+    billAskOpenClose() {
+      this.timeToClear = 60
+      this.pay.billAsk = !this.pay.billAsk;
     },
     startOpenClose() {
       this.timeToClear = 60
@@ -234,6 +263,7 @@ export default {
     this.mods = await this.$store.dispatch("data/getAllMods", {});
     this.products = await this.$store.dispatch("data/getAllProducts", {});
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
+    this.helpers = await this.$store.dispatch("data/getAllHelpers", {});
 
     this.updateInterval = setInterval(async () => {
       this.minusTime()

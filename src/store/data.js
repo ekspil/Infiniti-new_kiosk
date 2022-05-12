@@ -18,6 +18,17 @@ const actions = {
       throw e;
     }
   },
+  async getAllHelpers({ dispatch, commit }, { password }) {
+    try {
+      const result = await axios.get(
+        "https://" + host + "/api/kiosk/helpers/get"
+      );
+      return result.data;
+    } catch (e) {
+      console.log(dispatch, commit, password);
+      throw e;
+    }
+  },
   async getAllProducts({ dispatch, commit }, { password, archive }) {
     try {
       let url = "https://" + host + "/api/terminal/products/get";

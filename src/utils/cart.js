@@ -4,7 +4,7 @@ export const cartPlus = (cart, product) => {
   const isProduct = cart.find(
     (item) =>
       item.id === product.id &&
-      item.mods === product.mods &&
+      JSON.stringify(item.mods) === JSON.stringify(product.mods) &&
       product.price === item.price
   );
   if (!isProduct) {
@@ -15,7 +15,7 @@ export const cartPlus = (cart, product) => {
       if (item.id !== product.id) return item;
       if (
         item.id === product.id &&
-        item.mods === product.mods &&
+        JSON.stringify(item.mods) === JSON.stringify(product.mods) &&
         product.price === item.price
       ) {
         item.count++;
@@ -68,4 +68,47 @@ export const cartReduce = (cart) => {
     },
     { count: 0, sum: 0 }
   );
+};
+
+
+export const orderTypeStyle = (orderTypeThis) => {
+  if (orderTypeThis === "IN") {
+    return {
+      inColor: "grey lighten-4",
+      outColor: "brown",
+      inDark: false,
+      outDark: true,
+    };
+  } else {
+    return {
+      outColor: "grey lighten-4",
+      inColor: "brown",
+      inDark: true,
+      outDark: false,
+    };
+  }
+};
+
+
+export const helpersForYou = (helpersThis, productsThis, cartThis) => {
+  if(!helpersThis) return []
+  let helpers = JSON.parse(JSON.stringify(helpersThis));
+  helpers = helpers.filter((item) => {
+    for (let it of cartThis) {
+      if (item.exclude.includes(it.group_id)) return false;
+    }
+    return true;
+  });
+  helpers.sort((a, b) => {
+    if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
+    if (Number(a.priority) === Number(b.priority)) return 0; // если равны
+    if (Number(a.priority) < Number(b.priority)) return -1;
+  });
+
+  const randomProductId = helpers.map((item) => {
+    return item.items[Math.floor(Math.random() * item.items.length)];
+  });
+  return randomProductId.map((item) => {
+    return productsThis.find((it) => it.id === item);
+  });
 };

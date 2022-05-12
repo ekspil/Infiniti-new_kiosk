@@ -45,7 +45,7 @@
       >
         <v-container fluid>
           <v-row dense>
-            <v-col v-for="(item, i) in cart" :key="i" cols="12">
+            <v-col v-for="(item, i) in cart" :key="'prod' + i" cols="12">
               <v-card class="grey lighten-4">
                 <div class="d-flex flex-no-wrap justify-space-between">
                   <div>
@@ -55,12 +55,15 @@
                     ></v-card-title>
 
                     <div v-if="item.items">
-                    <v-card-subtitle
-                      class="pa-0 text-left pl-10"
-                      v-for="mod in item.items"
-                      :key="i + item.id + getProduct(mod).name"
-                      v-text="getProduct(mod).count || 1 + ' x ' + getProduct(mod).name"
-                    ></v-card-subtitle>
+                      <v-card-subtitle
+                        class="pa-0 text-left pl-10"
+                        v-for="mod in item.items"
+                        :key="'sub_prod' + i + item.id + getProduct(mod).name"
+                        v-text="
+                          getProduct(mod).count ||
+                          1 + ' x ' + getProduct(mod).name
+                        "
+                      ></v-card-subtitle>
                     </div>
                     <v-card-actions class="mb-5">
                       <v-card
@@ -132,7 +135,7 @@
         elevation="0"
         height="calc(25vh - 80px)"
       >
-        <v-container fluid>
+        <v-container fluid v-if="helpersSelect.length > 0">
           <v-row>
             <v-col cols="12"
               ><div class="align-self-center text-h3 text--primary mt-3">
@@ -140,8 +143,8 @@
               </div></v-col
             >
             <v-col
-              v-for="product in cart.slice(0, 4)"
-              :key="product.id"
+              v-for="(product, index) in helpersSelect.slice(0, 4)"
+              :key="'helper' + index + product.id"
               cols="3"
             >
               <v-card
@@ -262,10 +265,14 @@
 </template>
 
 <script>
-import { cartReduce } from "@/utils/cart";
+import { cartReduce, helpersForYou, orderTypeStyle } from "@/utils/cart";
 
 export default {
   props: {
+    helpers: {
+      type: Array,
+      default: null,
+    },
     activeCart: {
       type: Boolean,
       default: false,
@@ -290,33 +297,25 @@ export default {
     },
   }),
   computed: {
+    helpersSelect() {
+      return helpersForYou(this.helpers, this.products, this.cart)
+    },
     cartData() {
       return cartReduce(this.cart);
     },
     orderTypeStyle() {
-      if (this.orderType === "IN") {
-        return {
-          inColor: "grey lighten-4",
-          outColor: "brown",
-          inDark: false,
-          outDark: true,
-        };
-      } else {
-        return {
-          outColor: "grey lighten-4",
-          inColor: "brown",
-          inDark: true,
-          outDark: false,
-        };
-      }
+      return orderTypeStyle(this.orderType)
     },
   },
   methods: {
-    getProduct(id){
-      return this.products.find(it=> it.id == id)
+    getProduct(id) {
+      return this.products.find((it) => it.id == id);
     },
     productPlus(product, replace) {
       this.$emit("productPlus", product, replace);
+    },
+    productToCart(product) {
+      this.$emit("productToCart", product);
     },
     productMinus(product) {
       this.$emit("productMinus", product);
@@ -331,7 +330,8 @@ export default {
       this.$emit("orderTypeChange", type);
     },
     payOpenClose() {
-      this.$emit("payOpenClose");
+      this.$emit("billAskOpenClose");
+      //this.$emit("payOpenClose");
     },
   },
 };
