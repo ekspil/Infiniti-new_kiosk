@@ -32,7 +32,7 @@
       ></keyboard>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="orange darken-1" text @click="pay.billDialog = true">
+        <v-btn color="orange darken-1" text @click="payOpenClose('NOT_SEND')">
           Не надо отправлять
         </v-btn>
         <v-spacer></v-spacer>
@@ -61,8 +61,9 @@ export default {
     };
   },
   methods:{
-    payOpenClose() {
+    payOpenClose(command) {
       this.pay.billDialog = false
+      if(command === "NOT_SEND") this.pay.email = ""
       this.$emit("billAskOpenClose");
       this.$emit("payOpenClose");
     },

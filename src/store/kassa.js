@@ -29,10 +29,10 @@ export default {
         throw e;
       }
     },
-    async zReport({ dispatch, commit }, body) {
+    async settlement({ dispatch, commit }, body) {
       try {
         const result = await axios.post(
-          "https://" + host + "/api/kassa/zReport/",
+          "http://" + localhost + "/api/kassa/settlement/",
           body
         );
         return result.data;

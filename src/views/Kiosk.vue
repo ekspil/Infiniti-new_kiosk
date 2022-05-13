@@ -283,6 +283,9 @@ export default {
         this.$store.commit("auth/setToken", null);
         await this.$router.push("/login");
       }
+      if (result.command === "settlement") {
+        await this.$store.dispatch("kassa/settlement", {});
+      }
       this.kiosk = result;
     },
     minusTime() {
