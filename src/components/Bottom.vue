@@ -7,17 +7,18 @@
       class="grey lighten-4 text-center d-flex align-center justify-space-between mb-6"
     >
       <v-card flat color="grey lighten-4" width="30%">
-<!--        <v-btn class="ma-2" outlined fab color="brown">-->
-<!--          <v-icon>mdi-brightness-percent</v-icon>-->
-<!--        </v-btn>-->
-<!--        <v-btn class="ma-2" outlined fab color="brown">-->
-<!--          <v-icon>mdi-magnify</v-icon>-->
-<!--        </v-btn>-->
-<!--        <v-btn class="ma-2" outlined fab color="brown">-->
-<!--          <v-icon>mdi-tag</v-icon>-->
-<!--        </v-btn>-->
+        <!--        <v-btn class="ma-2" outlined fab color="brown">-->
+        <!--          <v-icon>mdi-brightness-percent</v-icon>-->
+        <!--        </v-btn>-->
+        <!--        <v-btn class="ma-2" outlined fab color="brown">-->
+        <!--          <v-icon>mdi-magnify</v-icon>-->
+        <!--        </v-btn>-->
         <v-btn class="ma-2" outlined fab color="brown" @click="clear">
           <v-icon>mdi-cancel</v-icon>
+        </v-btn>
+
+        <v-btn class="ma-2" outlined fab color="brown" @click="couponOpenClose">
+          <v-icon>mdi-tag</v-icon>
         </v-btn>
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
@@ -29,7 +30,13 @@
         </v-card-text>
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
-        <v-btn rounded color="brown" dark x-large @click="openCart"
+        <v-btn
+          rounded
+          color="brown"
+          x-large
+          dark
+          :disabled="cart.length === 0"
+          @click="openCart"
           ><v-icon size="24px"> mdi-shopping </v-icon>
           Перейти в корзину
         </v-btn>
@@ -73,6 +80,9 @@ export default {
     },
     openCart() {
       this.$emit("cartOpenClose");
+    },
+    couponOpenClose() {
+      this.$emit("couponOpenClose");
     },
     clear() {
       this.$emit("clear");

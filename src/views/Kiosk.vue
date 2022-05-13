@@ -12,7 +12,12 @@
       ></Menu>
     </v-main>
 
-    <bottom @cartOpenClose="cartOpenClose" @clear="clear" :cart="cart"></bottom>
+    <bottom
+      @cartOpenClose="cartOpenClose"
+      @couponOpenClose="couponOpenClose"
+      @clear="clear"
+      :cart="cart"
+    ></bottom>
     <!--    <bottom-sheet :activeBottomSheet="activeBottomSheet"></bottom-sheet>-->
     <cart
       :activeCart="activeCart"
@@ -48,6 +53,12 @@
       @startOpenClose="startOpenClose"
       @orderTypeChange="orderTypeChange"
     ></start>
+    <coupon
+      :coupon="coupon"
+      @updateTimer="updateTimer"
+      @findCoupon="findCoupon"
+      @couponOpenClose="couponOpenClose"
+    ></coupon>
     <lock :activeLock="kiosk.lock"></lock>
   </div>
 </template>
@@ -64,6 +75,7 @@ import Pay from "@/components/Pay";
 import Start from "@/components/Start";
 import Lock from "@/components/Lock";
 import BillAsk from "@/components/BillAsk";
+import Coupon from "@/components/Coupon";
 
 import { cartPlus, cartMinus, cartDelete } from "@/utils/cart";
 
@@ -79,7 +91,8 @@ export default {
     Start,
     Pay,
     Lock,
-    BillAsk
+    BillAsk,
+    Coupon,
   },
 
   data: () => ({
@@ -91,7 +104,11 @@ export default {
       success: false,
       billAsk: false,
       billDialog: false,
-      email: ""
+      email: "",
+    },
+    coupon: {
+      modal: false,
+      input: "",
     },
     activeCart: false,
     activeStart: true,
@@ -119,7 +136,11 @@ export default {
         success: false,
         billAsk: false,
         billDialog: false,
-        email: ""
+        email: "",
+      };
+      this.coupon = {
+        modal: false,
+        input: "",
       };
       this.activeCart = false;
       this.activeStart = true;
@@ -128,24 +149,43 @@ export default {
       this.selectedProduct = null;
       this.cart = [];
     },
-    updateTimer(){
-      this.timeToClear = 60
+    updateTimer() {
+      this.timeToClear = 60;
+    },
+    findCoupon() {
+      this.timeToClear = 60;
+      const prod = this.products.find(item => Number(item.coupon) === Number(this.coupon.input))
+      if(!prod) {
+        this.coupon.input = "Не найден"
+        setTimeout(()=>{
+          this.coupon.input = ""
+        }, 1000)
+        return;
+      }
+      const coupon = JSON.parse(JSON.stringify(prod))
+      coupon.name = `Купон №${coupon.coupon}: ${coupon.name}`
+      if(coupon.couponPrice){
+        coupon.price = coupon.couponPrice
+      }
+      this.coupon.input = ""
+      this.coupon.modal = false
+      this.productToCart(coupon)
     },
     async payOpenClose() {
-      this.timeToClear = 999
+      this.timeToClear = 999;
       this.pay.activePay = !this.pay.activePay;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {
           items: this.cart,
           type: this.orderType,
           kiosk: this.$store.state.auth.name,
-          clientEmail: this.pay.email
+          clientEmail: this.pay.email,
         });
         if (result.ok === false) {
           this.pay.alert = result.result;
           setTimeout(() => {
-            this.pay.alert = ""
-            this.pay.activePay = false
+            this.pay.alert = "";
+            this.pay.activePay = false;
           }, 7000);
         }
         if (result.ok === true) {
@@ -154,30 +194,34 @@ export default {
             this.clear();
           }, 7000);
         }
-        this.timeToClear = 60
+        this.timeToClear = 60;
       } catch (e) {
-        this.timeToClear = 120
+        this.timeToClear = 120;
         this.pay.alert = e.message;
       }
     },
     cartOpenClose() {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.activeCart = !this.activeCart;
     },
+    couponOpenClose() {
+      this.timeToClear = 60;
+      this.coupon.modal = !this.coupon.modal;
+    },
     billAskOpenClose() {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.pay.billAsk = !this.pay.billAsk;
     },
     startOpenClose() {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.activeStart = !this.activeStart;
     },
     orderTypeChange(type) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.orderType = type;
     },
     productToCart(prod, replace) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       const product = JSON.parse(JSON.stringify(prod));
       if (product.mods && product.mods.length > 0) {
         this.helper = true;
@@ -190,19 +234,19 @@ export default {
       this.cart = cartPlus(this.cart, product);
     },
     productMinusFromCart(product) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.cart = cartMinus(this.cart, product);
     },
     productDeleteFromCart(product) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.cart = cartDelete(this.cart, product);
     },
     groupSelect(groupId) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.selectedGroupId = groupId;
     },
     helperOpenClose(type) {
-      this.timeToClear = 60
+      this.timeToClear = 60;
       this.helper = !this.helper;
       if (type === "CANCEL") {
         this.selectedProduct = null;
@@ -241,22 +285,30 @@ export default {
       }
       this.kiosk = result;
     },
-    minusTime(){
-      if(this.timeToClear >= 3){
-
-        this.timeToClear -= 3
+    minusTime() {
+      if (this.timeToClear >= 3) {
+        this.timeToClear -= 3;
       }
-      if(this.timeToClear < 3 && this.timeToClear > -3){
-        this.clear()
+      if (this.timeToClear < 3 && this.timeToClear > -3) {
+        this.clear();
       }
-    }
+    },
   },
   computed: {
     selectedProducts() {
-      return this.products.filter((product) => {
-        if (!this.selectedGroupId) return product;
-        if (product.group_id === this.selectedGroupId) return product;
+      const p =  this.products.filter((product) => {
+        if (!this.selectedGroupId) {
+          if(!Number(product.priority)) return false;
+          if(Number(product.priority)) return true;
+        };
+        if (product.group_id === this.selectedGroupId) return true;
       });
+      p.sort((a, b) => {
+        if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
+        if (Number(a.priority) === Number(b.priority)) return 0; // если равны
+        if (Number(a.priority) < Number(b.priority)) return -1;
+      })
+      return p
     },
   },
   async mounted() {
@@ -266,7 +318,7 @@ export default {
     this.helpers = await this.$store.dispatch("data/getAllHelpers", {});
 
     this.updateInterval = setInterval(async () => {
-      this.minusTime()
+      this.minusTime();
       await this.updateStatus();
     }, 3000);
   },

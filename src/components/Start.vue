@@ -7,16 +7,38 @@
   >
     <v-card class="text-center black" height="100vh">
       <v-card
-        class="ml-8 mr-8 mt-0 overflow-hidden"
+        class="ml-0 mr-0 mt-0 overflow-hidden"
         color="black"
         elevation="0"
-        height="70vh"
+        height="100vh"
       >
-        <video class="mx-auto col" autoplay muted loop>
-          <source src="/radar.mp4" type="video/mp4" />
+        <video class="mx-0 px-0 col" width="100%" autoplay muted loop>
+          <source src="/bg.mp4" type="video/mp4" />
         </video>
+        <v-overlay :absolute="false" :opacity="0" :value="true">
+          <v-container  class="position_bottom">
+            <v-row>
+              <v-col :key="1" cols="6"
+                ><v-card
+                  color="orange"
+                  @click="orderTypeChange('OUT')"
+                  elevation="5"
+                >
+                  <v-img src="/out.png"></v-img> </v-card
+              ></v-col>
+              <v-col :key="2" cols="6"
+                ><v-card
+                  color="orange"
+                  @click="orderTypeChange('IN')"
+                  elevation="5"
+                >
+                  <v-img src="/here.png"></v-img> </v-card
+              ></v-col>
+            </v-row>
+          </v-container>
+        </v-overlay>
       </v-card>
-      <v-card v-bind="localAttrs" :padless="true" elevation="0">
+      <v-card v-if="false" v-bind="localAttrs" :padless="true" elevation="0">
         <v-card
           class="ma-0 overflow-auto"
           color="black"
@@ -35,9 +57,7 @@
                 width="40%"
                 @click="orderTypeChange('OUT')"
                 elevation="5"
-
               >
-
                 <v-img src="/out.png"></v-img>
               </v-card>
 
@@ -92,3 +112,9 @@ export default {
   },
 };
 </script>
+<style>
+.position_bottom {
+  position: relative;
+  bottom: -35vh;
+}
+</style>

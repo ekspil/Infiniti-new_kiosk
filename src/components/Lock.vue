@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    v-if="activeLock"
     v-model="activeLock"
     fullscreen
     hide-overlay
@@ -35,9 +36,6 @@ export default {
   data: () => ({
   }),
   methods: {
-    lockOpenClose() {
-      this.$emit("lockOpenClose", true);
-    },
   },
 };
 </script>

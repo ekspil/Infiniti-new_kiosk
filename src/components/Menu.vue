@@ -35,7 +35,7 @@ export default {
       },
     },
   },
-
+  computed: {},
   components: {},
   data: () => ({
     types: ["main_menu"],
