@@ -32,8 +32,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let isSecured = true;
+  console.log(to.path)
   if (to.path.includes("/login")) {
     isSecured = false;
+  }if (to.path === ("/")) {
+    return next("/login");
   }
   if (to.path.includes("/kiosk")) {
     isSecured = true;
