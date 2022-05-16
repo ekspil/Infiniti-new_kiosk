@@ -1,14 +1,15 @@
 <template>
-  <v-navigation-drawer app color="purple lighten-5" floating clipped permanent>
+  <v-navigation-drawer app color="purple lighten-5" floating clipped permanent >
     <v-list dense v-model="selected" tile>
       <v-list-item-group>
         <v-list-item
           v-for="group in groups"
           :key="group.name"
           link
+          class="pl-1 pr-1"
           @click="groupSelect(group.id)"
         >
-          <v-list-item-avatar rounded>
+          <v-list-item-avatar rounded class="mr-1 mb-3 mt-3">
             <v-img :alt="group.name"  :src="group.img ? 'https://api.rb24.ru/api/v1/files/download/1/' + group.img : '/burger.png'"></v-img>
           </v-list-item-avatar>
 

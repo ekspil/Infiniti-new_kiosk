@@ -255,6 +255,8 @@ export default {
         this.selectedProduct.items = [];
       }
       this.selectedProduct.items[this.selectedMod] = product.id;
+      if(!this.selectedProduct.setProducts) this.selectedProduct.setProducts = []
+      this.selectedProduct.setProducts[this.selectedMod] = product;
 
       this.$forceUpdate();
     },

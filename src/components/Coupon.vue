@@ -4,7 +4,7 @@
       <v-card-title class="text-h5 text-uppercase un"> <v-spacer></v-spacer>Купон <v-spacer></v-spacer></v-card-title>
       <v-card-text class="text-h4 red--gray text-center">{{ coupon.input || "0" }}</v-card-text>
       <keyboard
-        class="pb-7"
+        class="pb-7 "
         v-model="coupon.input"
         :layouts="[
           '123|456|789|{←:backspace}0{OK:custom}',
@@ -56,4 +56,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.vue-keyboard-key{
+  color: red;
+}
+</style>
