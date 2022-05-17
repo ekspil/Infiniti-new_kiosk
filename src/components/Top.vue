@@ -32,13 +32,13 @@ export default {
   data: () => ({
     items: [
       {
-        src: "/header.jpg",
+        src: "/top1.jpg",
       },
       {
-        src: "/header.jpg",
+        src: "/top2.jpg",
       },
       {
-        src: "/header.jpg",
+        src: "/top3.jpg",
       },
     ],
   }),
