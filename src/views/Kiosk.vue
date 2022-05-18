@@ -158,6 +158,7 @@ export default {
     },
     findCoupon() {
       this.timeToClear = 60;
+      if(!this.coupon.input) return
       const prod = this.products.find(item => Number(item.coupon) === Number(this.coupon.input))
       if(!prod) {
         this.coupon.input = "Не найден"
