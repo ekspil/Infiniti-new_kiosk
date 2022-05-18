@@ -20,7 +20,7 @@
     </v-card>
     <v-card v-if="pay.billDialog">
       <v-card-title class="text-h5 text-uppercase un"> <v-spacer></v-spacer>Укажите свою почту <v-spacer></v-spacer></v-card-title>
-      <v-card-text class="text-h4 red--text text-center">{{ pay.email || "ваша@почта" }}</v-card-text>
+      <v-card-text class="text-h4 orange--text text-center">{{ pay.email || "ваша@почта" }}</v-card-text>
       <keyboard
         v-model="pay.email"
         :layouts="[

@@ -58,6 +58,8 @@
       @updateTimer="updateTimer"
       @findCoupon="findCoupon"
       @couponOpenClose="couponOpenClose"
+      @clearCoupon="clearCoupon"
+      @productToCart="productToCart"
     ></coupon>
     <lock :activeLock="kiosk.lock"></lock>
 
@@ -110,6 +112,7 @@ export default {
     coupon: {
       modal: false,
       input: "",
+      find: null,
     },
     activeCart: false,
     activeStart: true,
@@ -168,9 +171,13 @@ export default {
       if(coupon.couponPrice){
         coupon.price = coupon.couponPrice
       }
-      this.coupon.input = ""
+      this.coupon.find = coupon
+    },
+    clearCoupon() {
+      this.timeToClear = 60;
+      this.coupon.find = null
       this.coupon.modal = false
-      this.productToCart(coupon)
+      this.coupon.input = ""
     },
     async payOpenClose() {
       this.timeToClear = 999;
