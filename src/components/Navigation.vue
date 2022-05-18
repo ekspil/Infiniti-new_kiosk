@@ -14,9 +14,9 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title class="text-h6 overflow-visible">{{
+            <v-list-item-title class="text-h5 overflow-visible "><div>{{
               group.name.toUpperCase()
-            }}</v-list-item-title>
+              }}</div></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -46,3 +46,9 @@ export default {
   },
 };
 </script>
+<style>
+.text-nav {
+  font-family: "Oswald" !important;
+  font-weight: bold !important;
+}
+</style>

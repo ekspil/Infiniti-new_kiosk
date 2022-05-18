@@ -45,15 +45,42 @@
             :maxlength="16"
           ></keyboard>
         </div>
-
-        <v-card-text class="pa-12" v-if="pay.orderId">
-          <h3>Ваш заказ:</h3>
-          <br />
-          <h1>{{ pay.orderId }}</h1>
-          <br />
-          <h3>Чеки теперь не печатаются</h3>
-          <h3>Запомните или сфотографируйте номер заказа</h3>
-        </v-card-text>
+        <v-card
+          v-if="pay.orderId"
+          class="grey lighten-3 ma-auto mt-16 position_card"
+          max-width="800px"
+          light
+        >
+          <v-img
+            class="position_orderId"
+            height="150px"
+            width="150px"
+            src="/logo_black.png"
+          ></v-img>
+          <v-card-text class="pa-12">
+            <h1> Спасибо за заказ!</h1>
+            <br/>
+            <h3> Номер заказа:</h3>
+            <br />
+            <h1 class="order_style">{{ pay.orderId }}</h1>
+            <br />
+            <h1>Запомни или сфотографируй номер заказа</h1>
+            <br />
+            <h3>Чеки и номер заказа больше не печатаются</h3>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              class="ma-auto mb-10"
+            rounded
+            outlined
+            color="brown"
+            x-large
+              @click="clear"
+            >
+              Следующий заказ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
 
         <v-progress-linear
           v-if="!pay.alert"
@@ -89,6 +116,9 @@ export default {
     input: "",
   }),
   methods: {
+    clear(){
+      this.$emit("clear");
+    },
     changed(value) {
       console.log("Value " + value);
     },
@@ -106,5 +136,19 @@ export default {
 .bg-img {
   background: url(/pay.jpg) center center no-repeat darkgrey;
   background-size: 1080px;
+}
+
+.position_orderId {
+  top: -75px;
+  left: 325px;
+}
+.position_card {
+  top: 400px;
+}
+.order_style {
+  font-family: "Oswald";
+  font-size: 155px;
+  line-height: 165px;
+  color: red
 }
 </style>

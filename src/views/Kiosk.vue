@@ -47,7 +47,7 @@
       :products="products"
       @helperOpenClose="helperOpenClose"
     ></helper>
-    <pay :pay="pay" @payOpenClose="payOpenClose"></pay>
+    <pay :pay="pay" @payOpenClose="payOpenClose" @clear="clear"></pay>
     <start
       :activeStart="activeStart"
       @startOpenClose="startOpenClose"
@@ -60,6 +60,7 @@
       @couponOpenClose="couponOpenClose"
     ></coupon>
     <lock :activeLock="kiosk.lock"></lock>
+
   </div>
 </template>
 
@@ -186,13 +187,10 @@ export default {
           setTimeout(() => {
             this.pay.alert = "";
             this.pay.activePay = false;
-          }, 7000);
+          }, 30000);
         }
         if (result.ok === true) {
           this.pay.orderId = result.order.id;
-          setTimeout(() => {
-            this.clear();
-          }, 7000);
         }
         this.timeToClear = 60;
       } catch (e) {
@@ -369,5 +367,11 @@ h2,
 h3,
 h4,
 h5 {
+}
+
+
+div {
+  font-family: "Oswald";
+  font-weight: bold;
 }
 </style>

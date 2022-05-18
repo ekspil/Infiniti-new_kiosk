@@ -29,7 +29,7 @@
           </v-card>
           <v-card flat color="brown" width="40%">
             <v-card-text class="d-flex flex-column">
-              <div class="align-self-center text-h3 text--primary">
+              <div class="align-self-center text-h3 text--primary text-nav">
                 Твой заказ
               </div>
             </v-card-text>
@@ -50,7 +50,7 @@
                 <div class="d-flex flex-no-wrap justify-space-between">
                   <div>
                     <v-card-title
-                      class="text-h5"
+                      class="text-h5 text-nav"
                       v-text="item.name"
                     ></v-card-title>
 
@@ -138,7 +138,7 @@
         <v-container fluid v-if="helpersSelect.length > 0">
           <v-row>
             <v-col cols="12"
-              ><div class="align-self-center text-h3 text--primary mt-3">
+              ><div class="align-self-center text-h3 text--primary mt-3 text-nav">
                 Рекомендации для тебя
               </div></v-col
             >
