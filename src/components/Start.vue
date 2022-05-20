@@ -23,6 +23,9 @@
                   color="orange"
                   @click="orderTypeChange('OUT')"
                   elevation="5"
+                  class="rounded-my"
+
+
                 >
                   <v-img src="/out.png"></v-img> </v-card
               ></v-col>
@@ -31,6 +34,7 @@
                   color="orange"
                   @click="orderTypeChange('IN')"
                   elevation="5"
+                  class="rounded-my"
                 >
                   <v-img src="/here.png"></v-img> </v-card
               ></v-col>
@@ -115,6 +119,9 @@ export default {
 <style>
 .position_bottom {
   position: relative;
-  bottom: -35vh;
+  bottom: -35vh
+}
+.rounded-my {
+  border-radius: 30px !important;
 }
 </style>
