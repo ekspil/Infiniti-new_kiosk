@@ -62,7 +62,11 @@
       @productToCart="productToCart"
     ></coupon>
     <lock :activeLock="kiosk.lock"></lock>
-
+    <delete-bill
+      :deleteBill="deleteBill"
+      @clearDelete="clearDelete"
+      @updateTimer="updateTimer"
+    ></delete-bill>
   </div>
 </template>
 
@@ -79,6 +83,7 @@ import Start from "@/components/Start";
 import Lock from "@/components/Lock";
 import BillAsk from "@/components/BillAsk";
 import Coupon from "@/components/Coupon";
+import DeleteBill from "@/components/DeleteBill";
 
 import { cartPlus, cartMinus, cartDelete } from "@/utils/cart";
 
@@ -96,6 +101,7 @@ export default {
     Lock,
     BillAsk,
     Coupon,
+    DeleteBill,
   },
 
   data: () => ({
@@ -129,6 +135,11 @@ export default {
     kiosk: {
       lock: true,
     },
+    deleteBill: {
+      show: false,
+      input: "",
+      find: null,
+    },
   }),
 
   methods: {
@@ -158,27 +169,36 @@ export default {
     },
     findCoupon() {
       this.timeToClear = 60;
-      if(!this.coupon.input) return
-      const prod = this.products.find(item => Number(item.coupon) === Number(this.coupon.input))
-      if(!prod) {
-        this.coupon.input = "Не найден"
-        setTimeout(()=>{
-          this.coupon.input = ""
-        }, 1000)
+      if (!this.coupon.input) return;
+      const prod = this.products.find(
+        (item) => Number(item.coupon) === Number(this.coupon.input)
+      );
+      if (!prod) {
+        this.coupon.input = "Не найден";
+        setTimeout(() => {
+          this.coupon.input = "";
+        }, 1000);
         return;
       }
-      const coupon = JSON.parse(JSON.stringify(prod))
-      coupon.name = `Купон №${coupon.coupon}: ${coupon.name}`
-      if(coupon.couponPrice){
-        coupon.price = coupon.couponPrice
+      const coupon = JSON.parse(JSON.stringify(prod));
+      coupon.name = `Купон №${coupon.coupon}: ${coupon.name}`;
+      if (coupon.couponPrice) {
+        coupon.price = coupon.couponPrice;
       }
-      this.coupon.find = coupon
+      this.coupon.find = coupon;
     },
     clearCoupon() {
       this.timeToClear = 60;
-      this.coupon.find = null
-      this.coupon.modal = false
-      this.coupon.input = ""
+      this.coupon.find = null;
+      this.coupon.modal = false;
+      this.coupon.input = "";
+    },
+    clearDelete() {
+      this.timeToClear = 0;
+      this.deleteBill.find = null;
+      this.deleteBill.show = false;
+      this.deleteBill.input = "";
+      this.deleteBill.process = false;
     },
     async payOpenClose() {
       this.timeToClear = 999;
@@ -292,6 +312,13 @@ export default {
       if (result.command === "settlement") {
         await this.$store.dispatch("kassa/settlement", {});
       }
+      if (result.command === "delete_bill") {
+        console.log(result.command);
+        this.deleteBill.show = true;
+        setTimeout(() => {
+          this.deleteBill.show = false;
+        }, 60000);
+      }
       this.kiosk = result;
     },
     minusTime() {
@@ -305,19 +332,19 @@ export default {
   },
   computed: {
     selectedProducts() {
-      const p =  this.products.filter((product) => {
+      const p = this.products.filter((product) => {
         if (!this.selectedGroupId) {
-          if(!Number(product.priority)) return false;
-          if(Number(product.priority)) return true;
-        };
+          if (!Number(product.priority)) return false;
+          if (Number(product.priority)) return true;
+        }
         if (product.group_id === this.selectedGroupId) return true;
       });
       p.sort((a, b) => {
         if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
         if (Number(a.priority) === Number(b.priority)) return 0; // если равны
         if (Number(a.priority) < Number(b.priority)) return -1;
-      })
-      return p
+      });
+      return p;
     },
   },
   async mounted() {
@@ -376,7 +403,6 @@ h3,
 h4,
 h5 {
 }
-
 
 div {
   font-family: "Oswald";

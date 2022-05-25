@@ -6,10 +6,10 @@ export default {
   namespaced: true,
   state: {},
   actions: {
-    async findOrderKassa({ dispatch, commit }, number) {
+    async findOrderKassa({ dispatch, commit }, { number, kiosk }) {
       try {
         const result = await axios.get(
-          "https://" + host + "/api/kassa/getOrder/" + number
+          "https://" + host + "/api/kassa/getOrder/" + number + "/" + kiosk
         );
         return result.data;
       } catch (e) {
