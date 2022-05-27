@@ -39,6 +39,13 @@
                   <v-img src="/here.png"></v-img> </v-card
               ></v-col>
             </v-row>
+            <v-row>
+              <v-col cols="8">
+              </v-col>
+              <v-col cols="4">
+                {{this.$store.state.auth.uid}}
+              </v-col>
+            </v-row>
           </v-container>
         </v-overlay>
       </v-card>
@@ -119,7 +126,7 @@ export default {
 <style>
 .position_bottom {
   position: relative;
-  bottom: -35vh
+  bottom: -39vh
 }
 .rounded-my {
   border-radius: 30px !important;

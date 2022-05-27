@@ -8,14 +8,16 @@ const state = () => ({
 const mutations = {
   setToken(state, info) {
     if (info) {
-      const { token, name, id,} = info;
+      const { token, name, id, uid} = info;
       state.token = token;
       state.name = name;
       state.id = id;
+      state.uid = uid;
     } else {
       state.token = null;
       state.name = null;
       state.id = null;
+      state.uid = null;
     }
   },
 
