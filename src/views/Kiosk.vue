@@ -134,6 +134,7 @@ export default {
     updateInterval: null,
     kiosk: {
       lock: true,
+      stops: [],
     },
     deleteBill: {
       show: false,
@@ -333,6 +334,9 @@ export default {
   computed: {
     selectedProducts() {
       const p = this.products.filter((product) => {
+        if (product.hidden === true) return false;
+        if(this.kiosk.stops.includes(product.id)) return false;
+
         if (!this.selectedGroupId) {
           if (!Number(product.priority)) return false;
           if (Number(product.priority)) return true;
