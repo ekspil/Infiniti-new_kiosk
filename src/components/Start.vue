@@ -43,7 +43,7 @@
               <v-col cols="8">
               </v-col>
               <v-col cols="4">
-                {{this.$store.state.auth.uid}}
+                {{this.$store.state.auth.uid || "Kiosk"}}
               </v-col>
             </v-row>
           </v-container>
