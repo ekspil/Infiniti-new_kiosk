@@ -4,7 +4,7 @@
     v-if="mods && products && selectedProduct"
     persistent
   >
-    <v-card class="overflow-auto" color="brown" elevation="0" height="500px">
+    <v-card class="overflow-auto" color="brown" elevation="0" :height="getModProducts.length > 4 ? '760px' : '480px'">
       <v-container fluid class="text-center">
         <v-card flat color=" brown" width="100%" class="mt-6 mb-6">
           <v-btn
