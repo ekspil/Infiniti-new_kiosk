@@ -13,7 +13,7 @@
         height="100vh"
       >
         <video class="mx-0 px-0 col" width="100%" autoplay muted loop>
-          <source src="/bg2.mp4" type="video/mp4" />
+          <source src="/bg3.mp4" type="video/mp4" />
         </video>
         <v-overlay :absolute="false" :opacity="0" :value="true">
           <v-container  class="position_bottom">
