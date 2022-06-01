@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app color="purple lighten-5" floating clipped permanent >
+  <v-navigation-drawer app color="purple lighten-5" floating clipped permanent stateless >
     <v-list dense v-model="selected" tile>
       <v-list-item-group>
         <v-list-item
