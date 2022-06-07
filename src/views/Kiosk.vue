@@ -212,18 +212,18 @@ export default {
           clientEmail: this.pay.email,
         });
         if (result.ok === false) {
-          this.pay.alert = result.result;
+          this.pay.alert = result.result.message;
           setTimeout(() => {
             this.pay.alert = "";
             this.pay.activePay = false;
-          }, 30000);
+          }, 5000);
         }
         if (result.ok === true) {
           this.pay.orderId = result.order.id;
         }
         this.timeToClear = 60;
       } catch (e) {
-        this.timeToClear = 120;
+        this.timeToClear = 60;
         this.pay.alert = e.message;
       }
     },
@@ -343,12 +343,18 @@ export default {
         }
         if (product.group_id === this.selectedGroupId) return true;
       });
+
       p.sort((a, b) => {
         if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
         if (Number(a.priority) === Number(b.priority)) return 0; // если равны
         if (Number(a.priority) < Number(b.priority)) return -1;
       });
-      return p;
+      return p.map(item => {
+        if(this.kiosk.vip){
+          item.price = item.priceVip
+        }
+        return item
+      });
     },
   },
   async mounted() {
