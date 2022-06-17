@@ -25,6 +25,7 @@
       :orderType="orderType"
       :products="products"
       :helpers="helpers"
+      :kiosk="kiosk"
       @cartOpenClose="cartOpenClose"
       @productMinus="productMinusFromCart"
       @productPlus="productToCart"
@@ -351,7 +352,7 @@ export default {
       });
       return p.map(item => {
         if(this.kiosk.vip){
-          item.price = item.priceVip
+          item.price = item.priceVip || 9999
         }
         return item
       });
@@ -366,7 +367,7 @@ export default {
     this.updateInterval = setInterval(async () => {
       this.minusTime();
       await this.updateStatus();
-    }, 3000);
+    }, 5000);
   },
   beforeDestroy() {
     if (this.updateInterval) {

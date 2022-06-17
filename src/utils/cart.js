@@ -1,5 +1,5 @@
 export const cartPlus = (cart, product) => {
-  product = JSON.parse(JSON.stringify(product))
+  product = JSON.parse(JSON.stringify(product));
   if (!product.count) product.count = 1;
   const isProduct = cart.find(
     (item) =>
@@ -70,7 +70,6 @@ export const cartReduce = (cart) => {
   );
 };
 
-
 export const orderTypeStyle = (orderTypeThis) => {
   if (orderTypeThis === "IN") {
     return {
@@ -89,14 +88,15 @@ export const orderTypeStyle = (orderTypeThis) => {
   }
 };
 
-
-export const helpersForYou = (helpersThis, productsThis, cartThis) => {
-  if(!helpersThis) return []
+export const helpersForYou = (helpersThis, productsThis, cartThis, kiosk) => {
+  if (!helpersThis) return [];
   let helpers = JSON.parse(JSON.stringify(helpersThis));
   helpers = helpers.filter((item) => {
     for (let it of cartThis) {
       if (item.exclude.includes(it.group_id)) return false;
     }
+    if (item.hidden === true) return false;
+    if (kiosk.stops.includes(item.id)) return false;
     return true;
   });
   helpers.sort((a, b) => {

@@ -273,6 +273,10 @@ export default {
       type: Array,
       default: null,
     },
+    kiosk: {
+      type: Object,
+      default: null,
+    },
     activeCart: {
       type: Boolean,
       default: false,
@@ -298,7 +302,7 @@ export default {
   }),
   computed: {
     helpersSelect() {
-      return helpersForYou(this.helpers, this.products, this.cart)
+      return helpersForYou(this.helpers, this.products, this.cart, this.kiosk)
     },
     cartData() {
       return cartReduce(this.cart);

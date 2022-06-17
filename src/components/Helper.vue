@@ -65,7 +65,6 @@
               >
               <v-card-title class="pt-0 pb-0">
                 <div class="text-subtitle-1 ma-auto">
-                  {{ product.price }} р.
                 </div>
               </v-card-title>
               <v-fab-transition v-if="checkedMod(product)">
@@ -256,7 +255,10 @@ export default {
       }
       this.selectedProduct.items[this.selectedMod] = product.id;
       if(!this.selectedProduct.setProducts) this.selectedProduct.setProducts = []
-      this.selectedProduct.setProducts[this.selectedMod] = product;
+      this.selectedProduct.setProducts[this.selectedMod] = JSON.parse(JSON.stringify(product));
+      if(!this.selectedProduct.setProducts[this.selectedMod].count){
+        this.selectedProduct.setProducts[this.selectedMod].count = 1
+      }
 
       this.$forceUpdate();
     },
