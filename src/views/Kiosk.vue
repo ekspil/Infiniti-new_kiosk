@@ -23,7 +23,7 @@
       :activeCart="activeCart"
       :cart="cart"
       :orderType="orderType"
-      :products="products"
+      :products="prods"
       :helpers="helpers"
       :kiosk="kiosk"
       @cartOpenClose="cartOpenClose"
@@ -45,7 +45,7 @@
       :helper="helper"
       :mods="mods"
       :selectedProduct="selectedProduct"
-      :products="products"
+      :products="prods"
       @helperOpenClose="helperOpenClose"
     ></helper>
     <pay :pay="pay" @payOpenClose="payOpenClose" @clear="clear"></pay>
@@ -333,10 +333,31 @@ export default {
     },
   },
   computed: {
+    prods() {
+      if(!this.products) return null
+      const p = this.products.filter((product) => {
+        if (product.hidden === true) return false;
+        if (this.kiosk.stops.includes(product.id)) return false;
+
+        return true;
+      });
+
+      p.sort((a, b) => {
+        if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
+        if (Number(a.priority) === Number(b.priority)) return 0; // если равны
+        if (Number(a.priority) < Number(b.priority)) return -1;
+      });
+      return p.map((item) => {
+        if (this.kiosk.vip) {
+          item.price = item.priceVip || 9999;
+        }
+        return item;
+      });
+    },
     selectedProducts() {
       const p = this.products.filter((product) => {
         if (product.hidden === true) return false;
-        if(this.kiosk.stops.includes(product.id)) return false;
+        if (this.kiosk.stops.includes(product.id)) return false;
 
         if (!this.selectedGroupId) {
           if (!Number(product.priority)) return false;
@@ -350,11 +371,11 @@ export default {
         if (Number(a.priority) === Number(b.priority)) return 0; // если равны
         if (Number(a.priority) < Number(b.priority)) return -1;
       });
-      return p.map(item => {
-        if(this.kiosk.vip){
-          item.price = item.priceVip || 9999
+      return p.map((item) => {
+        if (this.kiosk.vip) {
+          item.price = item.priceVip || 9999;
         }
-        return item
+        return item;
       });
     },
   },
