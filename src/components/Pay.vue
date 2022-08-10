@@ -62,7 +62,7 @@
             <br/>
             <h3> Номер заказа:</h3>
             <br />
-            <h1 class="order_style">{{ pay.orderId }}</h1>
+            <h1 class="order_style">{{  Number(String(pay.orderId).slice(-4)) }}</h1>
             <br />
             <h1>Запомни или сфотографируй номер заказа</h1>
             <br />
