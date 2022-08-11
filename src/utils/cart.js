@@ -108,7 +108,9 @@ export const helpersForYou = (helpersThis, productsThis, cartThis, kiosk) => {
   const randomProductId = helpers.map((item) => {
     return item.items[Math.floor(Math.random() * item.items.length)];
   });
-  return randomProductId.map((item) => {
+  const result = randomProductId.map((item) => {
     return productsThis.find((it) => it.id === item);
   });
+
+  return result.filter((it) => it);
 };
