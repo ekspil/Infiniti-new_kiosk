@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: kiosk-front
-        image: cr.yandex/crpbchff05ai3nceeln1/kiosk-front:1.0.38
+        image: cr.yandex/crpbchff05ai3nceeln1/kiosk-front:1.0.39
         imagePullPolicy: Always
         ports:
           - containerPort: 80

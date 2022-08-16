@@ -161,18 +161,22 @@ export default {
   }),
   computed: {
     selectedProductMods() {
-      return this.selectedProduct.mods.map((item) => {
+      const res = this.selectedProduct.mods.map((item) => {
         return this.mods.find((it) => it.id === item);
       });
+
+      return res.filter(item => item)
     },
     getModProducts() {
       const id = this.selectedProduct?.mods[this.selectedMod];
       if (!id) return [];
       const mod = this.mods.find((i) => i.id === id);
 
-      return mod.items.map((it) => {
+      const res = mod.items.map((it) => {
         return this.products.find((i) => i.id === it);
       });
+
+      return res.filter(item => item)
     },
     orderTypeStyle() {
       return {
