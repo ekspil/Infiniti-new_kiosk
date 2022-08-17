@@ -194,9 +194,11 @@ export default {
       if (!id) return [];
       const mod = this.mods.find((i) => i.id === id);
 
-      return mod.items.map((it) => {
+      const res =  mod.items.map((it) => {
         return this.products.find((i) => i.id === it);
       });
+
+      return res.filter(i => i)
     },
     getButtonEndText() {
       const result = this.selectedProduct.mods.reduce(
