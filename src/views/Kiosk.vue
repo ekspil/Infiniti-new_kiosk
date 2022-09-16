@@ -305,7 +305,8 @@ export default {
       }
       const result = await this.$store.dispatch("data/getKiosk", { name });
       if (result.command === "reload") {
-        alert("Перезагрузка");
+        location.reload()
+        console.log("Перезагрузка");
       }
       if (result.command === "logout") {
         this.$store.commit("auth/setToken", null);

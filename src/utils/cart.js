@@ -4,7 +4,7 @@ export const cartPlus = (cart, product) => {
   const isProduct = cart.find(
     (item) =>
       item.id === product.id &&
-      JSON.stringify(item.mods) === JSON.stringify(product.mods) &&
+      JSON.stringify(item.items) === JSON.stringify(product.items) &&
       product.price === item.price
   );
   if (!isProduct) {
@@ -15,7 +15,7 @@ export const cartPlus = (cart, product) => {
       if (item.id !== product.id) return item;
       if (
         item.id === product.id &&
-        JSON.stringify(item.mods) === JSON.stringify(product.mods) &&
+        JSON.stringify(item.items) === JSON.stringify(product.items) &&
         product.price === item.price
       ) {
         item.count++;
@@ -31,7 +31,7 @@ export const cartMinus = (cart, product) => {
     if (item.id !== product.id) return item;
     if (
       item.id === product.id &&
-      item.mods === product.mods &&
+      item.items === product.items &&
       product.price === item.price
     ) {
       item.count--;
@@ -48,7 +48,7 @@ export const cartDelete = (cart, product) => {
   return cart.filter((item) => {
     if (
       item.id === product.id &&
-      item.mods === product.mods &&
+      item.items === product.items &&
       product.price === item.price
     ) {
       return false;
