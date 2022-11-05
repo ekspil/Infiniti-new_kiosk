@@ -133,6 +133,7 @@ export default {
     cart: [],
     timeToClear: 0,
     updateInterval: null,
+    updateInterval2: null,
     kiosk: {
       lock: true,
       stops: [],
@@ -305,7 +306,7 @@ export default {
       }
       const result = await this.$store.dispatch("data/getKiosk", { name });
       if (result.command === "reload") {
-        location.reload()
+        location.reload();
         console.log("Перезагрузка");
       }
       if (result.command === "logout") {
@@ -335,7 +336,7 @@ export default {
   },
   computed: {
     prods() {
-      if(!this.products) return null
+      if (!this.products) return null;
       const p = this.products.filter((product) => {
         if (product.hidden === true) return false;
         if (this.kiosk.stops.includes(product.id)) return false;
@@ -386,6 +387,12 @@ export default {
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
     this.helpers = await this.$store.dispatch("data/getAllHelpers", {});
 
+    await this.$store.dispatch("kassa/settlement", {});
+
+    this.updateInterval2 = setInterval(async () => {
+      await this.$store.dispatch("kassa/settlement", {});
+    }, 24 * 3600 * 1000);
+
     this.updateInterval = setInterval(async () => {
       this.minusTime();
       await this.updateStatus();
@@ -394,6 +401,7 @@ export default {
   beforeDestroy() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
+      clearInterval(this.updateInterval2);
     }
   },
 };
