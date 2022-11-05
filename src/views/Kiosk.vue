@@ -387,7 +387,10 @@ export default {
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
     this.helpers = await this.$store.dispatch("data/getAllHelpers", {});
 
-    await this.$store.dispatch("kassa/settlement", {});
+    setTimeout(async ()=>{
+      await this.$store.dispatch("kassa/settlement", {});
+    }, 10000)
+
 
     this.updateInterval2 = setInterval(async () => {
       await this.$store.dispatch("kassa/settlement", {});
