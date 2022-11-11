@@ -337,12 +337,16 @@ export default {
   computed: {
     prods() {
       if (!this.products) return null;
-      const p = this.products.filter((product) => {
+      let p = this.products.filter((product) => {
         if (product.hidden === true) return false;
         if (this.kiosk.stops.includes(product.id)) return false;
 
         return true;
       });
+
+      if(this.kiosk && this.kiosk.type === "IIKO"){
+        p = p.filter(item => item.codeIiko)
+      }
 
       p.sort((a, b) => {
         if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
@@ -357,7 +361,7 @@ export default {
       });
     },
     selectedProducts() {
-      const p = this.products.filter((product) => {
+      let p = this.products.filter((product) => {
         if (product.hidden === true) return false;
         if (this.kiosk.stops.includes(product.id)) return false;
 
@@ -367,6 +371,11 @@ export default {
         }
         if (product.group_id === this.selectedGroupId) return true;
       });
+
+
+      if(this.kiosk && this.kiosk.type === "IIKO"){
+        p = p.filter(item => item.codeIiko)
+      }
 
       p.sort((a, b) => {
         if (Number(a.priority) > Number(b.priority)) return 1; // если первое значение больше второго
