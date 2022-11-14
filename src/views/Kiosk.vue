@@ -222,6 +222,8 @@ export default {
         }
         if (result.ok === true) {
           this.pay.orderId = result.order.id;
+          this.pay.iiko = result.order.iiko;
+          this.pay.iikoId = result.order.iikoId;
         }
         this.timeToClear = 60;
       } catch (e) {
