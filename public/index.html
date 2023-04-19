@@ -15,6 +15,31 @@
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+
+    <script>
+
+      window.addEventListener('touchmove', ev => {
+        if (ev.touches.length > 1) {
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+        };
+      }, { passive: false });
+
+      window.addEventListener('touchstart', ev => {
+        if (ev.touches.length > 1) {
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+        };
+      }, { passive: false });
+
+      window.addEventListener('touchend', ev => {
+        if (ev.touches.length > 1) {
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+        };
+      }, { passive: false });
+
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>
