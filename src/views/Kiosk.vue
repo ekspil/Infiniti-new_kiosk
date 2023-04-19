@@ -2,7 +2,7 @@
   <div>
     <top></top>
 
-    <navigation :groups="groups" @groupSelect="groupSelect"></navigation>
+    <navigation :groups="grps" @groupSelect="groupSelect"></navigation>
 
     <v-main>
       <Menu
@@ -336,6 +336,16 @@ export default {
     },
   },
   computed: {
+    grps(){
+      if(!this.groups) return this.groups
+      if(!this.products) return this.groups
+
+      return this.groups.filter(g => {
+        const item = this.prods.find(it=> it.group_id === g.id)
+        if(item) return true
+        return false
+      })
+    },
     prods() {
       if (!this.products) return null;
       let p = this.products.filter((product) => {
