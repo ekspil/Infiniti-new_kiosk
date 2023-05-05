@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kiosk-front
+  name: terminal-front
   namespace: production
   labels:
-    app: kiosk-front
+    app: terminal-front
 spec:
   replicas: 1
   strategy:
@@ -14,16 +14,16 @@ spec:
       maxSurge: 50%
   selector:
     matchLabels:
-      app: kiosk-front
+      app: terminal-front
   template:
     metadata:
       namespace: production
       labels:
-        app: kiosk-front
+        app: terminal-front
     spec:
       containers:
-      - name: kiosk-front
-        image: cr.yandex/crpbchff05ai3nceeln1/kiosk-front:1.0.50
+      - name: terminal-front
+        image: cr.yandex/crpbchff05ai3nceeln1/terminal-front:1.0.51
         imagePullPolicy: Always
         ports:
           - containerPort: 80

@@ -19,7 +19,7 @@
               transition="scroll-y-transition"
               :src="
                 product.img
-                  ? 'https://api.rb24.ru/api/v1/files/download/1/' + product.img
+                  ? 'https://terminal-api.rb24.ru/api/v1/files/download/1/' + product.img
                   : '/burger.png'
               "
               aspect-ratio="1.3"
@@ -34,7 +34,7 @@
               transition="scroll-y-transition"
               :src="
                 product.img
-                  ? 'https://api.rb24.ru/api/v1/files/download/1/' + product.img
+                  ? 'https://terminal-api.rb24.ru/api/v1/files/download/1/' + product.img
                   : '/burger.png'
               "
               aspect-ratio="1.3"
