@@ -173,7 +173,7 @@ export default {
     findCoupon() {
       this.timeToClear = 60;
       if (!this.coupon.input) return;
-      const prod = this.products.find(
+      const prod = this.prods.find(
         (item) => Number(item.coupon) === Number(this.coupon.input)
       );
       if (!prod) {

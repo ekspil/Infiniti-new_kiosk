@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: terminal-front
-        image: cr.yandex/crpbchff05ai3nceeln1/terminal-front:1.0.51
+        image: cr.yandex/crpbchff05ai3nceeln1/terminal-front:1.0.52
         imagePullPolicy: Always
         ports:
           - containerPort: 80
