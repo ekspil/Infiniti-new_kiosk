@@ -173,10 +173,16 @@ export default {
     findCoupon() {
       this.timeToClear = 60;
       if (!this.coupon.input) return;
-      const prod = this.prods.find(
+      let p = this.products;
+      if (this.kiosk && this.kiosk.type === "IIKO") {
+        p = this.products.filter((item) => item.codeIiko);
+      }
+
+      const prod = p.find(
         (item) => Number(item.coupon) === Number(this.coupon.input)
       );
-      if (!prod) {
+
+      if (!prod || this.kiosk.stops.includes(prod.id)) {
         this.coupon.input = "Не найден";
         setTimeout(() => {
           this.coupon.input = "";
@@ -336,15 +342,15 @@ export default {
     },
   },
   computed: {
-    grps(){
-      if(!this.groups) return this.groups
-      if(!this.products) return this.groups
+    grps() {
+      if (!this.groups) return this.groups;
+      if (!this.products) return this.groups;
 
-      return this.groups.filter(g => {
-        const item = this.prods.find(it=> it.group_id === g.id)
-        if(item) return true
-        return false
-      })
+      return this.groups.filter((g) => {
+        const item = this.prods.find((it) => it.group_id === g.id);
+        if (item) return true;
+        return false;
+      });
     },
     prods() {
       if (!this.products) return null;
@@ -355,8 +361,8 @@ export default {
         return true;
       });
 
-      if(this.kiosk && this.kiosk.type === "IIKO"){
-        p = p.filter(item => item.codeIiko)
+      if (this.kiosk && this.kiosk.type === "IIKO") {
+        p = p.filter((item) => item.codeIiko);
       }
 
       p.sort((a, b) => {
@@ -383,9 +389,8 @@ export default {
         if (product.group_id === this.selectedGroupId) return true;
       });
 
-
-      if(this.kiosk && this.kiosk.type === "IIKO"){
-        p = p.filter(item => item.codeIiko)
+      if (this.kiosk && this.kiosk.type === "IIKO") {
+        p = p.filter((item) => item.codeIiko);
       }
 
       p.sort((a, b) => {
@@ -407,10 +412,9 @@ export default {
     this.groups = await this.$store.dispatch("data/getAllGroups", {});
     this.helpers = await this.$store.dispatch("data/getAllHelpers", {});
 
-    setTimeout(async ()=>{
+    setTimeout(async () => {
       await this.$store.dispatch("kassa/settlement", {});
-    }, 10000)
-
+    }, 10000);
 
     this.updateInterval2 = setInterval(async () => {
       await this.$store.dispatch("kassa/settlement", {});
