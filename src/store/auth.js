@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "terminal-api.rb24.ru";
+const host = "api.rb24.ru";
 const state = () => ({
   token: null,
   user: {},

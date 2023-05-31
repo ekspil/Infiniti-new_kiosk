@@ -50,7 +50,7 @@
                   aspect-ratio="1.3"
                   :src="
                     coupon.find.img
-                      ? 'https://terminal-api.rb24.ru/api/v1/files/download/1/' +
+                      ? 'https://api.rb24.ru/api/v1/files/download/1/' +
                         coupon.find.img
                       : '/burger.png'
                   "
