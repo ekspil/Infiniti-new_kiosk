@@ -1,6 +1,6 @@
 {
   "name": "new_kiosk",
-  "version": "1.0.53",
+  "version": "1.0.55",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
