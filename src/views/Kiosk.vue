@@ -220,11 +220,11 @@ export default {
           clientEmail: this.pay.email,
         });
         if (result.ok === false) {
-          this.pay.alert = result.result.message;
+          this.pay.alert = result.result.replace(/[.*+?^${}()|[\]\\]/g, "");
           setTimeout(() => {
             this.pay.alert = "";
             this.pay.activePay = false;
-          }, 5000);
+          }, 15000);
         }
         if (result.ok === true) {
           this.pay.orderId = result.order.id;
