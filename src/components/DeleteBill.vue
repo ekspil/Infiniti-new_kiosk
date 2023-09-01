@@ -126,16 +126,32 @@ export default {
       this.$forceUpdate();
       this.$emit("updateTimer");
       try {
-        const result = await this.$store.dispatch("kassa/returnChekPayment", {
-          items: this.deleteBill.find.items,
-          type: this.deleteBill.find.type,
-          kiosk: this.$store.state.auth.name,
-          RRNCode: this.deleteBill.find.RRNCode,
-          AuthorizationCode: this.deleteBill.find.AuthorizationCode,
-          id: this.deleteBill.find.id
-        });
+        let result
+        if(!this.deleteBill.find.qrcId){
+
+          result = await this.$store.dispatch("kassa/returnChekPayment", {
+            items: this.deleteBill.find.items,
+            type: this.deleteBill.find.type,
+            kiosk: this.$store.state.auth.name,
+            RRNCode: this.deleteBill.find.RRNCode,
+            AuthorizationCode: this.deleteBill.find.AuthorizationCode,
+            id: this.deleteBill.find.id
+          });
+        }else {
+          this.deleteBill.process = "Ожидание ответа от сервера СБП";
+          this.$forceUpdate();
+          result = await this.$store.dispatch("data/returnSBPPayment", {
+            items: this.deleteBill.find.items,
+            type: this.deleteBill.find.type,
+            kiosk: this.$store.state.auth.name,
+            id: this.deleteBill.find.id,
+            qrcId: this.deleteBill.find.qrcId
+          });
+        }
+
         if (result.ok === false) {
-          this.deleteBill.process = result.result;
+          this.deleteBill.process = result.result || result.message;
+          this.$forceUpdate();
           setTimeout(() => {
             this.deleteBill.process = null;
           }, 5000);

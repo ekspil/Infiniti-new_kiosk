@@ -31,13 +31,13 @@
       @productPlus="productToCart"
       @productDelete="productDeleteFromCart"
       @orderTypeChange="orderTypeChange"
-      @payOpenClose="payOpenClose"
+      @payOpenClose="payOpenCloseSBP"
       @productToCart="productToCart"
       @billAskOpenClose="billAskOpenClose"
     ></cart>
     <bill-ask
       :pay="pay"
-      @payOpenClose="payOpenClose"
+      @payOpenClose="payOpenCloseSBP"
       @billAskOpenClose="billAskOpenClose"
       @updateTimer="updateTimer"
     ></bill-ask>
@@ -48,7 +48,14 @@
       :products="prods"
       @helperOpenClose="helperOpenClose"
     ></helper>
-    <pay :pay="pay" @payOpenClose="payOpenClose" @clear="clear"></pay>
+    <pay
+      :pay="pay"
+      :sbp="sbp"
+      @payOpenClose="payOpenCloseSBP"
+      :payTerminal="payOpenClose"
+      @clear="clear"
+      @clearSBP="clearSBP"
+    ></pay>
     <start
       :activeStart="activeStart"
       @startOpenClose="startOpenClose"
@@ -106,6 +113,7 @@ export default {
   },
 
   data: () => ({
+    payTimeSBP: 0,
     orderType: "IN",
     pay: {
       alert: "",
@@ -115,7 +123,9 @@ export default {
       billAsk: false,
       billDialog: false,
       email: "",
+      terminalPayWait: "",
     },
+    sbp: null,
     coupon: {
       modal: false,
       input: "",
@@ -146,6 +156,10 @@ export default {
   }),
 
   methods: {
+    clearSBP() {
+      this.sbp = null;
+      this.payTimeSBP = 10
+    },
     clear() {
       this.pay = {
         alert: "",
@@ -155,6 +169,8 @@ export default {
         billAsk: false,
         billDialog: false,
         email: "",
+        terminalPayWait: "",
+        imageSBP: "",
       };
       this.coupon = {
         modal: false,
@@ -166,6 +182,7 @@ export default {
       this.selectedGroupId = null;
       this.selectedProduct = null;
       this.cart = [];
+      this.sbp = null;
     },
     updateTimer() {
       this.timeToClear = 60;
@@ -209,8 +226,67 @@ export default {
       this.deleteBill.input = "";
       this.deleteBill.process = false;
     },
+    async payOpenCloseSBP() {
+      this.timeToClear = 999;
+      this.pay.activePay = !this.pay.activePay;
+      try {
+        const result = await this.$store.dispatch("data/paySBP", {
+          items: this.cart,
+          type: this.orderType,
+          kiosk: this.$store.state.auth.name,
+          clientEmail: this.pay.email,
+        });
+        this.sbp = result;
+        this.pay.terminalPayWait =
+          (new Date("2023-08-09").getTime() - 1690848000000) /
+          (1000 * 60 * 60 * 24);
+
+        this.payTimeSBP = 200;
+        let res1
+        while (this.payTimeSBP > 0) {
+          this.timeToClear = 999;
+          try {
+            res1 = await this.$store.dispatch("data/checkSBPApply", {
+              items: this.cart,
+              type: this.orderType,
+              kiosk: this.$store.state.auth.name,
+              clientEmail: this.pay.email,
+              qrcId: result.qrcId
+            });
+            if (!res1 || !res1.payed) this.payTimeSBP--;
+            if(res1.payed) break
+
+
+          } catch (e) {
+            console.log(e.message);
+            this.payTimeSBP--;
+          }
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+            }, 1000);
+          });
+        }
+        console.log(res1)
+        if (res1.ok === true) {
+          this.pay.activePay = true
+          this.sbp = null
+          this.pay.orderId = res1.order.order.id;
+          this.pay.iiko = res1.order.order.iiko;
+          this.pay.iikoId = res1.order.order.iikoId;
+        }
+        else {
+          this.sbp = null
+          this.pay.alert = res1.message;
+        }
+        this.timeToClear = 60;
+      } catch (e) {
+        await this.payOpenClose();
+      }
+    },
     async payOpenClose() {
       this.timeToClear = 999;
+      this.payTimeSBP = 10
       this.pay.activePay = !this.pay.activePay;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {

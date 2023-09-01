@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "api.rb24.ru";
+const host = "https://api.rb24.ru";
 const state = () => ({
   data: null,
 });
@@ -7,10 +7,48 @@ const state = () => ({
 const mutations = {};
 
 const actions = {
+
+  async paySBP({ dispatch, commit }, body) {
+    try {
+      const result = await axios.post(
+        host + "/api/kassa/paySBP/",
+        body
+      );
+      return result.data;
+    } catch (e) {
+      console.log(dispatch, commit, e);
+      throw e;
+    }
+  },
+  async returnSBPPayment({ dispatch, commit }, body) {
+    try {
+      const result = await axios.post(
+        host + "/api/kiosk/cancelSBP",
+        body
+      );
+      console.log(result.data)
+      return result.data;
+    } catch (e) {
+      console.log(dispatch, commit);
+      throw e;
+    }
+  },
+  async checkSBPApply({ dispatch, commit }, body) {
+    try {
+      const result = await axios.post(
+        host + "/api/kassa/checkSBP/",
+        body
+      );
+      return result.data;
+    } catch (e) {
+      console.log(dispatch, commit, e);
+      throw e;
+    }
+  },
   async getAllGroups({ dispatch, commit }, { password }) {
     try {
       const result = await axios.get(
-        "https://" + host + "/api/terminal/groups/get"
+        host + "/api/terminal/groups/get"
       );
       return result.data;
     } catch (e) {
@@ -21,7 +59,7 @@ const actions = {
   async getAllHelpers({ dispatch, commit }, { password }) {
     try {
       const result = await axios.get(
-        "https://" + host + "/api/kiosk/helpers/get"
+        host + "/api/kiosk/helpers/get"
       );
       return result.data;
     } catch (e) {
@@ -31,7 +69,7 @@ const actions = {
   },
   async getAllProducts({ dispatch, commit }, { password, archive }) {
     try {
-      let url = "https://" + host + "/api/terminal/products/get";
+      let url = host + "/api/terminal/products/get";
       if (archive) {
         url = url + "?archive=1";
       }
@@ -45,7 +83,7 @@ const actions = {
   async getAllMods({ dispatch, commit }, { password }) {
     try {
       const result = await axios.get(
-        "https://" + host + "/api/terminal/mods/get"
+        host + "/api/terminal/mods/get"
       );
       return result.data;
     } catch (e) {
@@ -60,7 +98,7 @@ const actions = {
       };
 
       const result = await axios.get(
-        "https://" + host + "/api/terminal/kiosks/get/" + name,
+        host + "/api/terminal/kiosks/get/" + name,
         {
           headers,
         }

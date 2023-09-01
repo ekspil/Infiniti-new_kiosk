@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "api.rb24.ru";
+const host = "https://api.rb24.ru";
 const localhost = "localhost:3000"
 
 export default {
@@ -9,7 +9,7 @@ export default {
     async findOrderKassa({ dispatch, commit }, { number, kiosk }) {
       try {
         const result = await axios.get(
-          "https://" + host + "/api/kassa/getOrder/" + number + "/" + kiosk
+          host + "/api/kassa/getOrder/" + number + "/" + kiosk
         );
         return result.data;
       } catch (e) {
@@ -57,7 +57,7 @@ export default {
     async xReport({ dispatch, commit }, body) {
       try {
         const result = await axios.post(
-          "https://" + host + "/api/kassa/xReport/",
+          host + "/api/kassa/xReport/",
           body
         );
         return result.data;

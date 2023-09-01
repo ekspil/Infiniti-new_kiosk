@@ -13,7 +13,7 @@
         color="grey darken-4"
         class="text-center overflow-hidden transition-ease-in-out"
         :class="{
-          'bg-img': !pay.alert && !pay.orderId,
+          'bg-img': !pay.alert && !pay.orderId && !sbp,
         }"
       >
         <v-alert
@@ -47,7 +47,7 @@
           ></keyboard>
         </div>
         <v-card
-          v-if="pay.orderId"
+          v-if="!sbp && pay.orderId"
           class="grey lighten-3 ma-auto mt-16 position_card"
           max-width="800px"
           light
@@ -82,6 +82,56 @@
             </v-btn>
           </v-card-actions>
         </v-card>
+        <v-card
+          v-if="sbp"
+          class="grey lighten-3 ma-auto mt-16 position_card"
+          max-width="800px"
+          light
+        >
+          <v-img
+            class="position_orderId"
+            height="150px"
+            width="150px"
+            src="/logo_black.png"
+          ></v-img>
+          <v-card-text class="pa-3">
+            <h3> Для оплаты через СБП воспользуйся своим банковским приложением и наведи камеру на QR код. Обычно требуется выбрать раздел "ПЛАТЕЖИ" и выбрать "Оплатить по QR коду"</h3>
+            <h3> СБП - самый современный и безопасный способ оплаты. Давайте привыкать к хорошему :)</h3>
+            <div class="text-center">
+
+              <v-img
+                class="position_qr"
+                height="300px"
+                width="300px"
+                :src="sbp.imageBMP"
+              ></v-img>
+            </div>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              class="ma-auto mb-10"
+              rounded
+              outlined
+              color="red"
+              x-large
+              @click="clearPay"
+            >
+              Отмена оплаты
+            </v-btn>
+            <v-btn
+              class="ma-auto mb-10"
+              rounded
+              outlined
+              color="brown"
+              x-large
+              @click="payTerminal"
+              :disabled="!!pay.terminalPayWait"
+            >
+              Оплата на терминале {{pay.terminalPayWait}}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
 
         <v-progress-linear
           v-if="!pay.alert"
@@ -111,14 +161,41 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    sbp: {
+      type: Object,
+      default: null,
+    },
+    payTerminal: {
+      type: Function,
+      default: ()=>{},
+    },
   },
   data: () => ({
     alert: true,
     input: "",
   }),
+  mounted(){
+
+    this.interval = setInterval(()=>{
+      if(!this.pay || !this.pay.terminalPayWait) return
+
+      this.pay.terminalPayWait = this.pay.terminalPayWait - 1
+      if(this.pay.terminalPayWait === 0) this.pay.terminalPayWait = ""
+
+    }, 1000)
+  },
+  beforeDestroy() {
+    if(this.interval){
+      clearInterval(this.interval)
+    }
+  },
   methods: {
     clear(){
       this.$emit("clear");
+    },
+    clearPay(){
+      this.$emit("clearSBP")
+      this.pay.activePay = false
     },
     changed(value) {
       console.log("Value " + value);
@@ -144,7 +221,13 @@ export default {
   left: 325px;
 }
 .position_card {
-  top: 400px;
+  top: 20vh;
+}
+.position_qr {
+  text-align: center;
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 .order_style {
   font-family: "Oswald";
