@@ -100,16 +100,29 @@
             <div class="text-center">
 
               <v-img
+                v-if="!sbp.payed"
                 class="position_qr"
                 height="300px"
                 width="300px"
                 :src="sbp.imageBMP"
               ></v-img>
+
+                <v-progress-circular
+                  v-if="sbp.payed"
+                  class="mt-16 "
+                  :size="70"
+                  :width="7"
+                  color="yellow darken-3"
+                  indeterminate
+                ></v-progress-circular>
+                <h1 v-if="sbp.payed" class="orange--text mb-10">Проведение транзакции</h1>
+
             </div>
           </v-card-text>
 
           <v-card-actions>
             <v-btn
+              v-if="!sbp.payed"
               class="ma-auto mb-10"
               rounded
               outlined
@@ -120,6 +133,7 @@
               Отмена оплаты
             </v-btn>
             <v-btn
+              v-if="!sbp.payed"
               class="ma-auto mb-10"
               rounded
               outlined

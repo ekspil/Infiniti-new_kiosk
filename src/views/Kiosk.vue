@@ -285,9 +285,10 @@ export default {
       }
     },
     async payOpenClose() {
+      this.sbp = null
       this.timeToClear = 999;
       this.payTimeSBP = 10
-      this.pay.activePay = !this.pay.activePay;
+      this.pay.activePay = true;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {
           items: this.cart,
@@ -416,6 +417,15 @@ export default {
         this.clear();
       }
     },
+  },
+  sockets: {
+    SBPPaymentSuccess(data) {
+      if(!this.sbp) return
+      if(this.sbp.qrcId !== data.qrcId) return
+      const newSbp = JSON.parse(JSON.stringify(this.sbp))
+      newSbp.payed = true
+      this.sbp = newSbp
+    }
   },
   computed: {
     grps() {
