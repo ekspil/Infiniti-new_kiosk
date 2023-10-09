@@ -259,7 +259,7 @@ export default {
 
           } catch (e) {
             console.log(e.message);
-            this.payTimeSBP--;
+            this.payTimeSBP=0;
           }
           await new Promise((resolve) => {
             setTimeout(() => {
