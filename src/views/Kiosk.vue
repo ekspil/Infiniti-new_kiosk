@@ -472,7 +472,10 @@ export default {
           if (!Number(product.priority)) return false;
           if (Number(product.priority)) return true;
         }
-        if (product.group_id === this.selectedGroupId) return true;
+        if (product.groups) {
+           if (product.groups.includes(this.selectedGroupId)) return true;
+        }
+        else if (product.group_id === this.selectedGroupId)   return true;
       });
 
       if (this.kiosk && this.kiosk.type === "IIKO") {
