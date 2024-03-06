@@ -1,4 +1,5 @@
-export const cartPlus = (cart, product) => {
+export const cartPlus = (cart, product, count) => {
+
   product = JSON.parse(JSON.stringify(product));
   if (!product.count) product.count = 1;
   const isProduct = cart.find(
@@ -18,7 +19,12 @@ export const cartPlus = (cart, product) => {
         JSON.stringify(item.items) === JSON.stringify(product.items) &&
         product.price === item.price
       ) {
-        item.count++;
+        if(!count) {
+          item.count++;
+        }
+        else {
+          item.count += count
+        }
         return item;
       }
 

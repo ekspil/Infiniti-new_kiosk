@@ -74,6 +74,9 @@ export default {
   methods: {
     productToCart(product) {
       this.$emit("productToCart", product);
+      if(product.description){
+        return
+      }
       this.cardClass = product.id;
       setTimeout(() => {
         this.cardClass = null;

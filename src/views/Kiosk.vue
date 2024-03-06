@@ -75,6 +75,14 @@
       @clearDelete="clearDelete"
       @updateTimer="updateTimer"
     ></delete-bill>
+    <Description
+      :productDescription="productDescription"
+      :allHelpers="helpers"
+      :allAvalibleProducts="prods"
+      @clearDelete="clearDeleteDescription"
+      @updateTimer="updateTimer"
+      @productToCart="productToCart"
+    ></Description>
   </div>
 </template>
 
@@ -92,6 +100,7 @@ import Lock from "@/components/Lock";
 import BillAsk from "@/components/BillAsk";
 import Coupon from "@/components/Coupon";
 import DeleteBill from "@/components/DeleteBill";
+import Description from "@/components/Description";
 
 import { cartPlus, cartMinus, cartDelete } from "@/utils/cart";
 
@@ -110,6 +119,7 @@ export default {
     BillAsk,
     Coupon,
     DeleteBill,
+    Description
   },
 
   data: () => ({
@@ -153,6 +163,10 @@ export default {
       input: "",
       find: null,
     },
+    productDescription: {
+      show: false,
+      product: null,
+    },
   }),
 
   methods: {
@@ -183,6 +197,8 @@ export default {
       this.selectedProduct = null;
       this.cart = [];
       this.sbp = null;
+      this.productDescription.show = false;
+      this.productDescription.product = null;
     },
     updateTimer() {
       this.timeToClear = 60;
@@ -225,6 +241,11 @@ export default {
       this.deleteBill.show = false;
       this.deleteBill.input = "";
       this.deleteBill.process = false;
+    },
+    clearDeleteDescription() {
+      this.timeToClear = 60;
+      this.productDescription.show = false;
+      this.productDescription.product = null;
     },
     async payOpenCloseSBP() {
       this.timeToClear = 999;
@@ -334,8 +355,12 @@ export default {
       this.timeToClear = 60;
       this.orderType = type;
     },
-    productToCart(prod, replace) {
+    productToCart(prod, replace, count) {
       this.timeToClear = 60;
+      if(prod.description && !count){
+        this.productDescriptionOpen(prod)
+        return
+      }
       const product = JSON.parse(JSON.stringify(prod));
       if (product.mods && product.mods.length > 0) {
         this.helper = true;
@@ -345,7 +370,11 @@ export default {
         }
         return;
       }
-      this.cart = cartPlus(this.cart, product);
+      this.cart = cartPlus(this.cart, product, count);
+    },
+    productDescriptionOpen(prod){
+      this.productDescription.show = true;
+      this.productDescription.product = JSON.parse(JSON.stringify(prod));
     },
     productMinusFromCart(product) {
       this.timeToClear = 60;

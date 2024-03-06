@@ -316,7 +316,7 @@ export default {
       return this.products.find((it) => it.id == id);
     },
     productPlus(product, replace) {
-      this.$emit("productPlus", product, replace);
+      this.$emit("productPlus", product, replace, true);
     },
     productToCart(product) {
       this.$emit("productToCart", product);
