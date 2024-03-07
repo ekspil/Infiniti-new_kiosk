@@ -462,7 +462,11 @@ export default {
       if (!this.products) return this.groups;
 
       return this.groups.filter((g) => {
-        const item = this.prods.find((it) => it.group_id === g.id);
+        const item = this.prods.find((it) => {
+          if(it.group_id === g.id) return true
+          if(it.groups && it.groups.includes(g.id))return true
+          return false
+        });
         if (item) return true;
         return false;
       });
