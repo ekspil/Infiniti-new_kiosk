@@ -46,7 +46,7 @@
             </div>
           </v-card-title>
 
-          <v-container fluid v-if="productDescription.product.helpers.length > 0">
+          <v-container fluid v-if="productDescription.product && productDescription.product.helpers && productDescription.product.helpers.length > 0">
             <v-row>
               <v-col cols="12"
               ><div class="align-self-center">
