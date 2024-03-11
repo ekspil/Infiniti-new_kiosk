@@ -37,7 +37,7 @@
             </div></v-card-title
           >
           <v-card-title class="pt-0 pb-0">
-            <div class="text-subtitle-1 ma-auto">
+            <div class="text-subtitle-1 ma-auto wrap-nobreak">
               {{ productDescription.product.description }}
             </div>
             <div class="text-subtitle-1 ma-auto"><br>
@@ -272,6 +272,14 @@ export default {
     transform: translateY(100vh);
     width: 100px;
   }
+}
+
+.wrap-nobreak {
+  overflow-wrap: normal;  /* не поддерживает IE, Firefox; является копией word-wrap */
+  word-wrap: normal;
+  word-break: normal;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */
+  line-break: auto;  /* нет поддержки для русского языка */
+  hyphens: manual;
 }
 
 </style>
