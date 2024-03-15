@@ -61,7 +61,7 @@
                 <v-card
                   flat
                   class="grey lighten-4 overflow-hidden"
-                  @click="productToCart(product)"
+                  @click="productToCartHelper(product)"
                   height="180px"
                 >
                   <v-img
@@ -204,6 +204,14 @@ export default {
       if(count){
         this.clearDelete()
       }
+    },
+    productToCartHelper(product) {
+      const replace = undefined
+      this.cardClass = product.id;
+      setTimeout(() => {
+        this.cardClass = null;
+      }, 280);
+      this.$emit("productToCart", product, replace, true);
     },
     productCount(num){
       if(!this.productDescription.product.count){

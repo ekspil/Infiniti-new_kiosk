@@ -319,7 +319,7 @@ export default {
       this.$emit("productPlus", product, replace, true);
     },
     productToCart(product) {
-      this.$emit("productToCart", product);
+      this.$emit("productToCart", product, undefined, true);
     },
     productMinus(product) {
       this.$emit("productMinus", product);
