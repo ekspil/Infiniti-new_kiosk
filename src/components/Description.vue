@@ -41,7 +41,7 @@
               {{ productDescription.product.description }}
             </div>
             <div class="text-subtitle-1 ma-auto"><br>
-              <b>Пищевая ценность:</b>
+              <b>Пищевая ценность на 100г. продукта:</b>
               {{ `Ккал: ${productDescription.product.des_k}, Белки: ${productDescription.product.des_p}, Жиры: ${productDescription.product.des_l}, Углеводы: ${productDescription.product.des_c}` }}
             </div>
           </v-card-title>
