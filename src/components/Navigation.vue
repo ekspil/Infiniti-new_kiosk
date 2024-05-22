@@ -10,7 +10,7 @@
           @click="groupSelect(group.id)"
         >
           <v-list-item-avatar rounded class="mr-1 mb-3 mt-3">
-            <v-img :alt="group.name"  :src="group.img ? 'https://api.rb24.ru/api/v1/files/download/1/' + group.img : '/burger.png'"></v-img>
+            <v-img :alt="group.name"  :src="group.img ? 'https://infiniti-kiosk-files-ekspil.amvera.io/api/v1/files/download/1/' + group.img : '/burger.png'"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>

@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "api.rb24.ru";
+const host = "infiniti-kiosk-back-ekspil.amvera.io";
 const state = () => ({
   token: null,
   user: {},

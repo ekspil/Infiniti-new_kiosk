@@ -358,9 +358,11 @@ export default {
     productToCart(prod, replace, count) {
       this.timeToClear = 60;
       if(prod.description && !count){
+
         this.productDescriptionOpen(prod)
         return
       }
+
       const product = JSON.parse(JSON.stringify(prod));
       if (product.mods && product.mods.length > 0) {
         this.helper = true;
@@ -370,6 +372,7 @@ export default {
         }
         return;
       }
+
       this.cart = cartPlus(this.cart, product, count);
     },
     productDescriptionOpen(prod){

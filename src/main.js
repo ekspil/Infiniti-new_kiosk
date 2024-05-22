@@ -9,7 +9,7 @@ Vue.config.productionTip = false;
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: "https://api.rb24.ru",
+    connection: "https://infiniti-kiosk-back-ekspil.amvera.io",
     vuex: {
       store,
       actionPrefix: "SOCKET_",

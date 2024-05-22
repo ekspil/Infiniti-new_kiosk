@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = "https://api.rb24.ru";
+const host = "https://infiniti-kiosk-back-ekspil.amvera.io";
 const state = () => ({
   data: null,
 });
