@@ -2,18 +2,20 @@
   <div>
     <top></top>
 
-    <navigation :groups="grps" @groupSelect="groupSelect"></navigation>
+    <navigation :getNameByLang="getNameByLang" :groups="grps" @groupSelect="groupSelect"></navigation>
 
     <v-main>
       <Menu
         v-if="products"
         :products="selectedProducts"
+        :getNameByLang="getNameByLang"
         @productToCart="productToCart"
       ></Menu>
     </v-main>
 
     <bottom
       @cartOpenClose="cartOpenClose"
+      :getNameByLang="getNameByLang"
       @couponOpenClose="couponOpenClose"
       @clear="clear"
       :cart="cart"
@@ -21,6 +23,7 @@
     <!--    <bottom-sheet :activeBottomSheet="activeBottomSheet"></bottom-sheet>-->
     <cart
       :activeCart="activeCart"
+      :getNameByLang="getNameByLang"
       :cart="cart"
       :orderType="orderType"
       :products="prods"
@@ -37,6 +40,7 @@
     ></cart>
     <bill-ask
       :pay="pay"
+      :getNameByLang="getNameByLang"
       @payOpenClose="payOpenCloseSBP"
       @billAskOpenClose="billAskOpenClose"
       @updateTimer="updateTimer"
@@ -51,6 +55,9 @@
     <pay
       :pay="pay"
       :sbp="sbp"
+
+      :lang="lang"
+      :getNameByLang="getNameByLang"
       @payOpenClose="payOpenCloseSBP"
       :payTerminal="payOpenClose"
       @clear="clear"
@@ -58,11 +65,14 @@
     ></pay>
     <start
       :activeStart="activeStart"
+      :lang="lang"
       @startOpenClose="startOpenClose"
       @orderTypeChange="orderTypeChange"
+      @selectLang="selectLang"
     ></start>
     <coupon
       :coupon="coupon"
+      :getNameByLang="getNameByLang"
       @updateTimer="updateTimer"
       @findCoupon="findCoupon"
       @couponOpenClose="couponOpenClose"
@@ -77,6 +87,7 @@
     ></delete-bill>
     <Description
       :productDescription="productDescription"
+      :getNameByLang="getNameByLang"
       :allHelpers="helpers"
       :allAvalibleProducts="prods"
       @clearDelete="clearDeleteDescription"
@@ -119,10 +130,11 @@ export default {
     BillAsk,
     Coupon,
     DeleteBill,
-    Description
+    Description,
   },
 
   data: () => ({
+    lang: "ru",
     payTimeSBP: 0,
     orderType: "IN",
     pay: {
@@ -170,9 +182,30 @@ export default {
   }),
 
   methods: {
+    getNameByLang(product) {
+      if(!product.translate) return product.name
+      const arr = product.translate.split("/");
+      switch (this.lang) {
+        case "ru":
+          return product.name;
+        case "gb":
+          return arr[0] || product.name;
+        case "cn":
+          return arr[1] || arr[0] || product.name;
+        case "kr":
+          return arr[2] || arr[0] || product.name;
+        case "jp":
+          return arr[3] || arr[0] || product.name;
+        default:
+          return product.name;
+      }
+    },
+    selectLang(lang) {
+      this.lang = lang;
+    },
     clearSBP() {
       this.sbp = null;
-      this.payTimeSBP = 10
+      this.payTimeSBP = 10;
     },
     clear() {
       this.pay = {
@@ -263,7 +296,7 @@ export default {
           (1000 * 60 * 60 * 24);
 
         this.payTimeSBP = 200;
-        let res1
+        let res1;
         while (this.payTimeSBP > 0) {
           this.timeToClear = 999;
           try {
@@ -272,15 +305,13 @@ export default {
               type: this.orderType,
               kiosk: this.$store.state.auth.name,
               clientEmail: this.pay.email,
-              qrcId: result.qrcId
+              qrcId: result.qrcId,
             });
             if (!res1 || !res1.payed) this.payTimeSBP--;
-            if(res1.payed) break
-
-
+            if (res1.payed) break;
           } catch (e) {
             console.log(e.message);
-            this.payTimeSBP=0;
+            this.payTimeSBP = 0;
           }
           await new Promise((resolve) => {
             setTimeout(() => {
@@ -288,16 +319,15 @@ export default {
             }, 1000);
           });
         }
-        console.log(res1)
+        console.log(res1);
         if (res1.ok === true) {
-          this.pay.activePay = true
-          this.sbp = null
+          this.pay.activePay = true;
+          this.sbp = null;
           this.pay.orderId = res1.order.order.id;
           this.pay.iiko = res1.order.order.iiko;
           this.pay.iikoId = res1.order.order.iikoId;
-        }
-        else {
-          this.sbp = null
+        } else {
+          this.sbp = null;
           this.pay.alert = res1.message;
         }
         this.timeToClear = 60;
@@ -306,9 +336,9 @@ export default {
       }
     },
     async payOpenClose() {
-      this.sbp = null
+      this.sbp = null;
       this.timeToClear = 999;
-      this.payTimeSBP = 10
+      this.payTimeSBP = 10;
       this.pay.activePay = true;
       try {
         const result = await this.$store.dispatch("kassa/payTerminal", {
@@ -357,10 +387,9 @@ export default {
     },
     productToCart(prod, replace, count) {
       this.timeToClear = 60;
-      if(prod.description && !count){
-
-        this.productDescriptionOpen(prod)
-        return
+      if (prod.description && !count) {
+        this.productDescriptionOpen(prod);
+        return;
       }
 
       const product = JSON.parse(JSON.stringify(prod));
@@ -375,7 +404,7 @@ export default {
 
       this.cart = cartPlus(this.cart, product, count);
     },
-    productDescriptionOpen(prod){
+    productDescriptionOpen(prod) {
       this.productDescription.show = true;
       this.productDescription.product = JSON.parse(JSON.stringify(prod));
     },
@@ -452,12 +481,12 @@ export default {
   },
   sockets: {
     SBPPaymentSuccess(data) {
-      if(!this.sbp) return
-      if(this.sbp.qrcId !== data.qrcId) return
-      const newSbp = JSON.parse(JSON.stringify(this.sbp))
-      newSbp.payed = true
-      this.sbp = newSbp
-    }
+      if (!this.sbp) return;
+      if (this.sbp.qrcId !== data.qrcId) return;
+      const newSbp = JSON.parse(JSON.stringify(this.sbp));
+      newSbp.payed = true;
+      this.sbp = newSbp;
+    },
   },
   computed: {
     grps() {
@@ -466,9 +495,9 @@ export default {
 
       return this.groups.filter((g) => {
         const item = this.prods.find((it) => {
-          if(it.group_id === g.id) return true
-          if(it.groups && it.groups.includes(g.id))return true
-          return false
+          if (it.group_id === g.id) return true;
+          if (it.groups && it.groups.includes(g.id)) return true;
+          return false;
         });
         if (item) return true;
         return false;
@@ -509,9 +538,8 @@ export default {
           if (Number(product.priority)) return true;
         }
         if (product.groups) {
-           if (product.groups.includes(this.selectedGroupId)) return true;
-        }
-        else if (product.group_id === this.selectedGroupId)   return true;
+          if (product.groups.includes(this.selectedGroupId)) return true;
+        } else if (product.group_id === this.selectedGroupId) return true;
       });
 
       if (this.kiosk && this.kiosk.type === "IIKO") {

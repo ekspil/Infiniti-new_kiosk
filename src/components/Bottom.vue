@@ -23,13 +23,13 @@
       </v-card>
       <v-card flat color="grey lighten-4" width="30%">
         <v-card-text class="d-flex flex-column">
-          <div class="align-self-start">Товаров {{ cartData.count }}:</div>
+          <div class="align-self-start">{{ getNameByLang(Positions) }} {{ cartData.count }}:</div>
           <div class="align-self-start text-h5 text--primary">
             {{ cartData.sum }} Р
           </div>
         </v-card-text>
       </v-card>
-      <v-card flat color="grey lighten-4" width="30%">
+      <v-card flat color="grey lighten-4" min-width="30%">
         <v-btn
           rounded
           color="brown"
@@ -37,8 +37,9 @@
           dark
           :disabled="cart.length === 0"
           @click="openCart"
+          min-width="80%"
           ><v-icon size="24px"> mdi-shopping </v-icon>
-          Перейти в корзину
+          {{ getNameByLang(Cart)}}
         </v-btn>
       </v-card>
     </v-card>
@@ -47,8 +48,12 @@
 
 <script>
 import { cartReduce } from "@/utils/cart";
+import { Cart, Positions } from "../utils/buttonNames";
 export default {
   props: {
+    getNameByLang: {
+      type: Function
+    },
     actions: {
       type: Function,
       default: () => {},
@@ -89,6 +94,12 @@ export default {
     },
   },
   computed: {
+    Positions(){
+      return Positions
+    },
+    Cart(){
+      return Cart
+    },
     cartData() {
       return cartReduce(this.cart);
     },

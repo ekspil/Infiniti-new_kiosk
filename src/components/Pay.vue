@@ -11,9 +11,13 @@
         height="100vh"
         dark
         color="grey darken-4"
-        class="text-center overflow-hidden transition-ease-in-out"
+        class="text-center overflow-hidden transition-ease-in-out ma-0 pa-0"
         :class="{
-          'bg-img': !pay.alert && !pay.orderId && !sbp,
+          'bg-img-ru': lang === 'ru' && !pay.alert && !pay.orderId && !sbp,
+          'bg-img-cn': lang === 'cn' && !pay.alert && !pay.orderId && !sbp,
+          'bg-img-gb': lang === 'gb' && !pay.alert && !pay.orderId && !sbp,
+          'bg-img-jp': lang === 'jp' && !pay.alert && !pay.orderId && !sbp,
+          'bg-img-kr': lang === 'kr' && !pay.alert && !pay.orderId && !sbp,
         }"
       >
         <v-alert
@@ -130,7 +134,7 @@
               x-large
               @click="clearPay"
             >
-              Отмена оплаты
+              {{ getNameByLang(CancelPay) }}
             </v-btn>
             <v-btn
               v-if="!sbp.payed"
@@ -142,7 +146,7 @@
               @click="payTerminal"
               :disabled="!!pay.terminalPayWait"
             >
-              Оплата на терминале {{pay.terminalPayWait}}
+              {{ getNameByLang(payByCard) }} {{pay.terminalPayWait}}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -168,9 +172,18 @@
 
 <script>
 import keyboard from "vue-keyboard";
+import { CancelPay, PayByCard } from "../utils/buttonNames";
 export default {
   components: { keyboard },
   props: {
+
+    lang: {
+      type: String,
+      default: "ru",
+    },
+    getNameByLang: {
+      type: Function
+    },
     pay: {
       type: Object,
       default: () => ({}),
@@ -188,6 +201,14 @@ export default {
     alert: true,
     input: "",
   }),
+  computed: {
+    CancelPay(){
+      return CancelPay
+    },
+    PayByCard(){
+      return PayByCard
+    }
+  },
   mounted(){
 
     this.interval = setInterval(()=>{
@@ -227,6 +248,26 @@ export default {
 <style>
 .bg-img {
   background: url(/pay.jpg) center center no-repeat darkgrey;
+  background-size: 1080px;
+}
+.bg-img-ru {
+  background: url(/pay-ru.jpg) center center no-repeat darkgrey;
+  background-size: 1080px;
+}
+.bg-img-cn {
+  background: url(/pay-cn.jpg) center center no-repeat darkgrey;
+  background-size: 1080px;
+}
+.bg-img-kr {
+  background: url(/pay-kr.jpg) center center no-repeat darkgrey;
+  background-size: 1080px;
+}
+.bg-img-jp {
+  background: url(/pay-jp.jpg) center center no-repeat darkgrey;
+  background-size: 1080px;
+}
+.bg-img-gb {
+  background: url(/pay-gb.jpg) center center no-repeat darkgrey;
   background-size: 1080px;
 }
 

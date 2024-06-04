@@ -18,6 +18,75 @@
         <v-overlay :absolute="false" :opacity="0" :value="true">
           <v-container  class="position_bottom">
             <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="2">
+
+                <v-card
+                  color="orange"
+                  @click="selectLang('ru')"
+                  elevation="5"
+                  class="rounded-my ma-auto"
+                  height="50" width="50"
+                >
+                  <v-img src="/ru.png" height="50" width="50"></v-img> </v-card
+                >
+
+              </v-col>
+              <v-col cols="2">
+
+                <v-card
+                  color="orange"
+                  @click="selectLang('gb')"
+                  elevation="5"
+                  class="rounded-my ma-auto"
+                  height="50" width="50"
+                >
+                  <v-img src="/gb.png" height="50" width="50" class="pa-0 ma-0"></v-img> </v-card
+                >
+
+              </v-col>
+              <v-col cols="2">
+
+                <v-card
+                  color="orange"
+                  @click="selectLang('cn')"
+                  elevation="5"
+                  class="rounded-my ma-auto"
+                  height="50" width="50"
+                >
+                  <v-img src="/cn.png" height="50" width="50"></v-img> </v-card
+                >
+
+              </v-col>
+              <v-col cols="2">
+
+                <v-card
+                  color="orange"
+                  @click="selectLang('kr')"
+                  elevation="5"
+                  class="rounded-my ma-auto"
+                  height="50" width="50"
+                >
+                  <v-img src="/kr.png" height="50" width="50"></v-img> </v-card
+                >
+
+              </v-col>
+              <v-col cols="2" align-self="center" >
+
+                <v-card
+                  color="orange"
+                  @click="selectLang('jp')"
+                  elevation="5"
+                  class="rounded-my ma-auto"
+                  height="50" width="50"
+                >
+                  <v-img src="/jp.png" height="50" width="50"></v-img> </v-card
+                >
+
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+            <v-row>
               <v-col :key="1" cols="6"
                 ><v-card
                   color="orange"
@@ -27,7 +96,11 @@
 
 
                 >
-                  <v-img src="/out.png"></v-img> </v-card
+                <v-img v-if="lang === 'ru'" src="/ta-ru.png"></v-img>
+                <v-img v-if="lang === 'cn'" src="/ta-cn.png"></v-img>
+                <v-img v-if="lang === 'kr'" src="/ta-kr.png"></v-img>
+                <v-img v-if="lang === 'jp'" src="/ta-jp.png"></v-img>
+                <v-img v-if="lang === 'gb'" src="/ta-gb.png"></v-img></v-card
               ></v-col>
               <v-col :key="2" cols="6"
                 ><v-card
@@ -36,7 +109,11 @@
                   elevation="5"
                   class="rounded-my"
                 >
-                  <v-img src="/here.png"></v-img> </v-card
+                <v-img v-if="lang === 'ru'" src="/in-ru.png"></v-img>
+                <v-img v-else-if="lang === 'cn'" src="/in-cn.png"></v-img>
+                <v-img v-else-if="lang === 'kr'" src="/in-kr.png"></v-img>
+                <v-img v-else-if="lang === 'jp'" src="/in-jp.png"></v-img>
+                <v-img v-else-if="lang === 'gb'" src="/in-gb.png"></v-img></v-card
               ></v-col>
             </v-row>
             <v-row>
@@ -69,7 +146,11 @@
                 @click="orderTypeChange('OUT')"
                 elevation="5"
               >
-                <v-img src="/out.png"></v-img>
+                <v-img v-if="lang === 'ru'" src="/ta-ru.png"></v-img>
+                <v-img v-if="lang === 'cn'" src="/ta-cn.png"></v-img>
+                <v-img v-if="lang === 'kr'" src="/ta-kr.png"></v-img>
+                <v-img v-if="lang === 'jp'" src="/ta-jp.png"></v-img>
+                <v-img v-if="lang === 'gb'" src="/ta-gb.png"></v-img>
               </v-card>
 
               <v-card
@@ -78,7 +159,11 @@
                 @click="orderTypeChange('IN')"
                 elevation="5"
               >
-                <v-img src="/here.png"></v-img>
+                <v-img v-if="lang === 'ru'" src="/in-ru.png"></v-img>
+                <v-img v-else-if="lang === 'cn'" src="/in-cn.png"></v-img>
+                <v-img v-else-if="lang === 'kr'" src="/in-kr.png"></v-img>
+                <v-img v-else-if="lang === 'jp'" src="/in-jp.png"></v-img>
+                <v-img v-else-if="lang === 'gb'" src="/in-gb.png"></v-img>
               </v-card>
             </v-card>
           </v-container>
@@ -103,6 +188,10 @@ export default {
       type: String,
       default: "IN",
     },
+    lang: {
+      type: String,
+      default: "ru",
+    },
   },
   data: () => ({
     localAttrs: {
@@ -111,6 +200,9 @@ export default {
   }),
   computed: {},
   methods: {
+    selectLang(lang){
+      this.$emit("selectLang", lang);
+    },
     startOpenClose() {
       this.$emit("startOpenClose");
     },
@@ -126,7 +218,7 @@ export default {
 <style>
 .position_bottom {
   position: relative;
-  bottom: -39vh
+  bottom: -35vh
 }
 .rounded-my {
   border-radius: 30px !important;

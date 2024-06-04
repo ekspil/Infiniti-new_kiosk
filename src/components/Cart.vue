@@ -24,13 +24,13 @@
               x-large
               @click="cartOpenClose"
             >
-              Назад
+              {{ getNameByLang(Back) }}
             </v-btn>
           </v-card>
           <v-card flat color="brown" width="40%">
             <v-card-text class="d-flex flex-column">
               <div class="align-self-center text-h3 text--primary text-nav">
-                Твой заказ
+                {{ getNameByLang(YouOrder) }}
               </div>
             </v-card-text>
           </v-card>
@@ -51,7 +51,7 @@
                   <div>
                     <v-card-title
                       class="text-h5 text-nav"
-                      v-text="item.name"
+                      v-text="getNameByLang(item)"
                     ></v-card-title>
 
                     <div v-if="item.items">
@@ -68,9 +68,9 @@
                     <v-card-actions class="mb-5">
                       <v-card
                         elevation="0"
-                        width="130px"
+                        min-width="130px"
                         class="ml-3 mr-3 grey lighten-4"
-                        ><h2>{{ item.price * item.count }} Руб.</h2></v-card
+                        ><h2 style="white-space: nowrap;">{{ item.price * item.count }} {{ getNameByLang(Rub) }}</h2></v-card
                       >
                       <v-btn
                         class="ml-2 mr-8"
@@ -98,8 +98,9 @@
                         class="ml-16 align-self-end"
                         rounded
                         outlined
+                        min-width="25%"
                         @click="productDelete(item)"
-                        >Удалить</v-btn
+                        >{{ getNameByLang(Delete) }}</v-btn
                       >
                       <v-btn
                         v-if="item.mods.length > 0"
@@ -139,7 +140,7 @@
           <v-row>
             <v-col cols="12"
               ><div class="align-self-center text-h3 text--primary mt-3 text-nav">
-                Рекомендации для тебя
+              {{ getNameByLang(RecomendsForYou) }}
               </div></v-col
             >
             <v-col
@@ -165,12 +166,12 @@
                 </v-img>
                 <v-card-title class="pt-0 pb-0"
                   ><div class="ma-auto text-truncate">
-                    {{ product.name }}
+                    {{getNameByLang(product)}}
                   </div></v-card-title
                 >
                 <v-card-title class="pt-0 pb-0">
                   <div class="text-subtitle-1 ma-auto">
-                    {{ product.price }} р.
+                    {{ product.price }} {{getNameByLang(Rub)}}
                   </div>
                 </v-card-title>
                 <v-fab-transition>
@@ -228,7 +229,8 @@
                     elevation="0"
                     @click="orderTypeChange('IN')"
                   >
-                    <v-icon>mdi-brightness-percent</v-icon>На подносе </v-btn
+                    <v-icon>mdi-brightness-percent</v-icon>
+                    {{ getNameByLang(TakeHere) }}</v-btn
                   ><v-btn
                     class="mt-1 mb-1 mr-1"
                     :outlined="false"
@@ -239,7 +241,8 @@
                     elevation="0"
                     @click="orderTypeChange('OUT')"
                   >
-                    <v-icon>mdi-magnify</v-icon>В пакете
+                    <v-icon>mdi-magnify</v-icon>
+                  {{ getNameByLang(TakeAway) }}
                   </v-btn>
                 </v-btn>
               </v-card>
@@ -251,9 +254,10 @@
                   dark
                   x-large
                   @click="payOpenClose"
+                  min-width="85%"
                   :disabled="cart.length === 0"
                   ><v-icon size="24px" class="mr-2"> mdi-shopping </v-icon>
-                  Оплатить {{ cartData.sum }} руб.
+                  {{ getNameByLang(Pay) }} {{ cartData.sum }} {{ getNameByLang(Rub) }}
                 </v-btn>
               </v-card>
             </v-card>
@@ -266,9 +270,24 @@
 
 <script>
 import { cartReduce, helpersForYou, orderTypeStyle } from "@/utils/cart";
+import {
+  AddToCart,
+  Back,
+  Cancel,
+  Delete,
+  Pay,
+  RecomendsForYou,
+  Rub,
+  TakeAway,
+  TakeHere,
+  YouOrder
+} from "../utils/buttonNames";
 
 export default {
   props: {
+    getNameByLang: {
+      type: Function
+    },
     helpers: {
       type: Array,
       default: null,
@@ -301,6 +320,36 @@ export default {
     },
   }),
   computed: {
+    RecomendsForYou(){
+      return RecomendsForYou
+    },
+    YouOrder(){
+      return YouOrder
+    },
+    Delete(){
+      return Delete
+    },
+    Back(){
+      return Back
+    },
+    TakeAway(){
+      return TakeAway
+    },
+    TakeHere(){
+      return TakeHere
+    },
+    Rub(){
+      return Rub
+    },
+    Pay(){
+      return Pay
+    },
+    AddToCart(){
+      return AddToCart
+    },
+    Cancel(){
+      return Cancel
+    },
     helpersSelect() {
       return helpersForYou(this.helpers, this.products, this.cart, this.kiosk)
     },

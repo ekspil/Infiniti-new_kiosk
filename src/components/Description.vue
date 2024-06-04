@@ -33,7 +33,7 @@
 
           <v-card-title class="pt-0 pb-0"
             ><div class="ma-auto">
-              {{ productDescription.product.name }}
+              {{ getNameByLang(productDescription.product) }}
             </div></v-card-title
           >
           <v-card-title class="pt-0 pb-0">
@@ -90,12 +90,12 @@
                   </v-img>
                   <v-card-title class="pt-0 pb-0"
                   ><div class="ma-auto text-truncate">
-                    {{ product.name }}
+                    {{ getNameByLang(product)}}
                   </div></v-card-title
                   >
                   <v-card-title class="pt-0 pb-0">
                     <div class="text-subtitle-1 ma-auto">
-                      {{ product.price }} р.
+                      {{ product.price }} {{ getNameByLang(Rub)}}
                     </div>
                   </v-card-title>
                 </v-card>
@@ -134,10 +134,10 @@
               @click="productToCart(productDescription.product,  productDescription.product.count)"
               bottom
               large
-
+              min-width="40%"
               class="ml-15 pl-16 pr-16  mb-3 mt-4"
             >
-              Добавить в корзину
+              {{ getNameByLang(AddToCart) }}
             </v-btn>
             <v-btn
               :key="productDescription.product.id + 'btn_с'"
@@ -146,10 +146,10 @@
               dark
               large
               bottom
-
+              min-width="15%"
               class="ml-15 pl-5 pr-5 mb-3 mt-4"
             >
-              Передумал
+              {{ getNameByLang(Cancel) }}
             </v-btn>
 
           </v-card-actions>
@@ -161,9 +161,14 @@
 </template>
 
 <script>
+import { AddToCart, Cancel, Rub } from "../utils/buttonNames";
+
 export default {
   components: {},
   props: {
+    getNameByLang: {
+      type: Function
+    },
     productDescription: {
       type: Object,
       default: null,
@@ -222,6 +227,15 @@ export default {
     }
   },
   computed: {
+    Rub(){
+      return Rub
+    },
+    AddToCart(){
+      return AddToCart
+    },
+    Cancel(){
+      return Cancel
+    },
     helpers(){
       if(!this.productDescription.product) return null
       const selectedHelpers = []

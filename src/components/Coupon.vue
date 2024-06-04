@@ -13,7 +13,7 @@
           src="/logo_black.png"
         ></v-img>
         <v-card-title class="text-h5 text-uppercase pt-0">
-          <v-spacer></v-spacer>Купон <v-spacer></v-spacer
+          <v-spacer></v-spacer>{{getNameByLang(Coupon)}} <v-spacer></v-spacer
         ></v-card-title>
         <v-card-text class="text-h4 red--gray text-center">{{
           coupon.input || "0"
@@ -101,9 +101,14 @@
 
 <script>
 import keyboard from "vue-keyboard";
+import { Coupon } from "../utils/buttonNames";
 export default {
   components: { keyboard },
   props: {
+
+    getNameByLang: {
+      type: Function
+    },
     coupon: {
       type: Object,
       default: null,
@@ -111,6 +116,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    Coupon(){
+      return Coupon
+    }
   },
   methods: {
     changed() {

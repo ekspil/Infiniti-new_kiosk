@@ -1,7 +1,8 @@
 <template>
   <v-dialog v-if="pay && pay.billAsk !== undefined" v-model="pay.billAsk" persistent max-width="600">
     <v-card v-if="!pay.billDialog">
-      <v-card-title class="text-h5"> <v-spacer></v-spacer>Отправить чек на почту? <v-spacer></v-spacer></v-card-title>
+      <v-card-title class="text-h5"> <v-spacer></v-spacer>
+        {{ getNameByLang(DoesSendBill) }} <v-spacer></v-spacer></v-card-title>
       <v-card-text
         >Мы заботимся об экологии и постепенно уходим от чеков на бумаге. На
         этом устройстве печать на бумаге больше не доступна. Хотите, чтобы мы
@@ -10,10 +11,10 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange darken-1" text @click="pay.billDialog = true">
-          Отправить на почту
+          {{getNameByLang(SendEmail) }}
         </v-btn>
         <v-btn color="green darken-1"  text @click="payOpenClose">
-          Спасибо, не надо
+          {{getNameByLang(NotSendEmail) }}
         </v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>
@@ -47,9 +48,14 @@
 
 <script>
 import keyboard from "vue-keyboard";
+import { SendEmail, NotSendEmail, DoesSendBill } from "../utils/buttonNames";
+
 export default {
   components: { keyboard },
   props: {
+    getNameByLang: {
+      type: Function
+    },
     pay: {
       type: Object,
       default: null,
@@ -59,6 +65,17 @@ export default {
     return {
       input: "",
     };
+  },
+  computed: {
+    DoesSendBill(){
+      return DoesSendBill
+    },
+    SendEmail(){
+      return SendEmail
+    },
+    NotSendEmail(){
+      return NotSendEmail
+    },
   },
   methods:{
     payOpenClose(command) {

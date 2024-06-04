@@ -15,7 +15,7 @@
 
           <v-list-item-content>
             <v-list-item-title class="text-h5 overflow-visible "><div>{{
-              group.name.toUpperCase()
+                getNameByLang(group).toUpperCase()
               }}</div></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -28,6 +28,10 @@
 export default {
   name: "Navigation",
   props: {
+
+    getNameByLang: {
+      type: Function
+    },
     groups: {
       type: Array,
       default: () => {

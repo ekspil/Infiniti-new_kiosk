@@ -1,5 +1,10 @@
 <template>
-  <v-card flat tile class="overflow-y-auto overflow-x-hidden" height="calc(100vh - 330px)">
+  <v-card
+    flat
+    tile
+    class="overflow-y-auto overflow-x-hidden"
+    height="calc(100vh - 330px)"
+  >
     <v-container v-for="type in types" :key="type" class="" fluid>
       <v-row>
         <v-col
@@ -9,39 +14,35 @@
           sm="6"
           md="6"
         >
-          <v-card
-            flat
-
-          >
+          <v-card flat>
             <v-img
               v-if="cardClass === product.id"
               :class="cardClass === product.id ? 'loader' : ''"
               transition="scroll-y-transition"
               :src="
                 product.img
-                  ? 'https://infiniti-kiosk-files-ekspil.amvera.io/api/v1/files/download/1/' + product.img
+                  ? 'https://infiniti-kiosk-files-ekspil.amvera.io/api/v1/files/download/1/' +
+                    product.img
                   : '/burger.png'
               "
               aspect-ratio="1.3"
             >
             </v-img>
           </v-card>
-          <v-card
-            flat
-            @click="productToCart(product)"
-          >
+          <v-card flat @click="productToCart(product)">
             <v-img
               transition="scroll-y-transition"
               :src="
                 product.img
-                  ? 'https://infiniti-kiosk-files-ekspil.amvera.io/api/v1/files/download/1/' + product.img
+                  ? 'https://infiniti-kiosk-files-ekspil.amvera.io/api/v1/files/download/1/' +
+                    product.img
                   : '/burger.png'
               "
               aspect-ratio="1.3"
             >
             </v-img>
             <v-card-title class="pt-0 pb-0"
-              ><div class="ma-auto">{{ product.name }}</div></v-card-title
+              ><div class="ma-auto">{{ getNameByLang(product) }}</div></v-card-title
             >
             <v-card-title class="pt-0 pb-0">
               <div class="text-subtitle-1 ma-auto">{{ product.price }} р.</div>
@@ -57,6 +58,9 @@
 export default {
   name: "Menu",
   props: {
+    getNameByLang: {
+      type: Function
+    },
     products: {
       type: Array,
       default: () => {
